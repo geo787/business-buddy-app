@@ -19,7 +19,7 @@ const Index = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
           <Button 
             size="lg" 
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
             className="gap-2 w-full sm:w-auto"
           >
             Go to Dashboard <ArrowRight size={16} className="ml-1" />

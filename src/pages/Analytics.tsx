@@ -1,328 +1,212 @@
 
-import { useState } from "react";
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-// Sample data for charts
-const retentionData = [
-  { month: "Jan", rate: 78 },
-  { month: "Feb", rate: 82 },
-  { month: "Mar", rate: 85 },
-  { month: "Apr", rate: 79 },
-  { month: "May", rate: 82 },
-  { month: "Jun", rate: 87 },
-  { month: "Jul", rate: 90 },
-  { month: "Aug", rate: 88 },
-  { month: "Sep", rate: 92 },
-  { month: "Oct", rate: 94 },
-  { month: "Nov", rate: 91 },
-  { month: "Dec", rate: 85 }
-];
-
-const churnData = [
-  { month: "Jan", rate: 5.2 },
-  { month: "Feb", rate: 4.8 },
-  { month: "Mar", rate: 4.5 },
-  { month: "Apr", rate: 5.1 },
-  { month: "May", rate: 4.6 },
-  { month: "Jun", rate: 3.9 },
-  { month: "Jul", rate: 3.5 },
-  { month: "Aug", rate: 3.2 },
-  { month: "Sep", rate: 2.8 },
-  { month: "Oct", rate: 2.6 },
-  { month: "Nov", rate: 2.9 },
-  { month: "Dec", rate: 3.3 }
-];
-
-const customerSegments = [
-  { name: "Enterprise", value: 45 },
-  { name: "Small Business", value: 30 },
-  { name: "Freelancer", value: 25 }
-];
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
-
-const lifetimeValueData = [
-  { segment: "Enterprise", value: 8500 },
-  { segment: "Small Business", value: 4200 },
-  { segment: "Freelancer", value: 1800 }
-];
+import { Button } from "@/components/ui/button";
+import { 
+  Calendar, 
+  BarChart, 
+  PieChart, 
+  LineChart, 
+  Download, 
+  Share2, 
+  Users, 
+  TrendingUp, 
+  TrendingDown 
+} from "lucide-react";
 
 const Analytics = () => {
-  const [timeRange, setTimeRange] = useState("year");
-
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Analytics</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">Analytics</h1>
           <p className="text-muted-foreground">
-            Detailed metrics about customer retention and behavior.
+            Detailed insights into your customer retention metrics.
           </p>
         </div>
-        <Select defaultValue={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="month">Last Month</SelectItem>
-            <SelectItem value="quarter">Last Quarter</SelectItem>
-            <SelectItem value="year">Last Year</SelectItem>
-            <SelectItem value="all">All Time</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          <Button variant="outline" className="gap-2">
+            <Calendar className="h-4 w-4" />
+            <span className="hidden sm:inline">Last 30 Days</span>
+            <span className="sm:hidden">30d</span>
+          </Button>
+          <Button variant="outline" size="icon">
+            <Download className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon">
+            <Share2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <CardTitle>Retention Rate Trend</CardTitle>
-            <CardDescription>Monthly retention rate percentages</CardDescription>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={retentionData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
-                >
-                  <defs>
-                    <linearGradient id="colorRetention" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted))" />
-                  <XAxis dataKey="month" />
-                  <YAxis domain={[0, 100]} />
-                  <Tooltip 
-                    formatter={(value: number) => [`${value}%`, 'Retention Rate']}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      borderColor: 'hsl(var(--border))',
-                      borderRadius: 'var(--radius)'
-                    }}
-                  />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="rate" 
-                    name="Retention Rate" 
-                    stroke="hsl(var(--primary))" 
-                    strokeWidth={2}
-                    fill="url(#colorRetention)"
-                    dot={{ stroke: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
-                    activeDot={{ stroke: 'hsl(var(--primary))', strokeWidth: 2, r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">1,286</div>
+                <div className="flex items-center text-xs text-green-500 font-medium">
+                  <TrendingUp className="mr-1 h-3 w-3" /> +12%
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <CardTitle>Churn Rate</CardTitle>
-            <CardDescription>Monthly customer churn percentages</CardDescription>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">New Customers</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={churnData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
-                >
-                  <defs>
-                    <linearGradient id="colorChurn" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#FF6B6B" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#FF6B6B" stopOpacity={0.2}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted))" />
-                  <XAxis dataKey="month" />
-                  <YAxis domain={[0, 10]} />
-                  <Tooltip 
-                    formatter={(value: number) => [`${value}%`, 'Churn Rate']}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      borderColor: 'hsl(var(--border))',
-                      borderRadius: 'var(--radius)'
-                    }}
-                  />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="rate" 
-                    name="Churn Rate" 
-                    stroke="#FF6B6B" 
-                    strokeWidth={2}
-                    fill="url(#colorChurn)"
-                    dot={{ stroke: '#FF6B6B', strokeWidth: 2, r: 4 }}
-                    activeDot={{ stroke: '#FF6B6B', strokeWidth: 2, r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">145</div>
+                <div className="flex items-center text-xs text-green-500 font-medium">
+                  <TrendingUp className="mr-1 h-3 w-3" /> +22%
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                <Users className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Churned Customers</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">38</div>
+                <div className="flex items-center text-xs text-red-500 font-medium">
+                  <TrendingDown className="mr-1 h-3 w-3" /> +4%
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <Users className="h-6 w-6 text-red-600 dark:text-red-400" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Retention Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">87%</div>
+                <div className="flex items-center text-xs text-green-500 font-medium">
+                  <TrendingUp className="mr-1 h-3 w-3" /> +2%
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <LineChart className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <CardTitle>Customer Segments</CardTitle>
-            <CardDescription>Distribution of customers by segment</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={customerSegments}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {customerSegments.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    formatter={(value: number) => [`${value}%`, 'Percentage']}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      borderColor: 'hsl(var(--border))',
-                      borderRadius: 'var(--radius)'
-                    }}
-                  />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <CardTitle>Customer Lifetime Value</CardTitle>
-            <CardDescription>Average LTV by customer segment</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={lifetimeValueData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
-                >
-                  <defs>
-                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4CAF50" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#4CAF50" stopOpacity={0.2}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted))" />
-                  <XAxis dataKey="segment" />
-                  <YAxis />
-                  <Tooltip 
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, 'Lifetime Value']}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      borderColor: 'hsl(var(--border))',
-                      borderRadius: 'var(--radius)'
-                    }}
-                  />
-                  <Legend />
-                  <Bar 
-                    dataKey="value" 
-                    name="Lifetime Value" 
-                    fill="url(#colorValue)" 
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="hover:shadow-lg transition-shadow duration-200">
-        <CardHeader>
-          <CardTitle>Engagement Metrics</CardTitle>
-          <CardDescription>Key metrics showing customer engagement and retention</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="activity">
-            <TabsList className="grid w-full max-w-md grid-cols-3">
-              <TabsTrigger value="activity">Activity</TabsTrigger>
-              <TabsTrigger value="growth">Growth</TabsTrigger>
-              <TabsTrigger value="retention">Retention</TabsTrigger>
-            </TabsList>
-            <TabsContent value="activity" className="pt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Daily Active Users</h3>
-                  <p className="text-3xl font-bold">824</p>
-                  <p className="text-xs text-green-500">+5.2% from last week</p>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex mb-4">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="retention">Retention</TabsTrigger>
+          <TabsTrigger value="segments">Segments</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="overview">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Customer Growth</CardTitle>
+                <CardDescription>
+                  New vs churned customers over time
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px] flex items-center justify-center bg-muted/20">
+                <div className="flex items-center">
+                  <BarChart className="h-6 w-6 mr-2 text-muted-foreground" />
+                  <span className="text-muted-foreground">Growth Chart Placeholder</span>
                 </div>
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Average Session</h3>
-                  <p className="text-3xl font-bold">12m 24s</p>
-                  <p className="text-xs text-green-500">+1.8% from last week</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Customer Sources</CardTitle>
+                <CardDescription>
+                  Where your customers are coming from
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-[250px] flex items-center justify-center bg-muted/20">
+                <div className="flex items-center">
+                  <PieChart className="h-6 w-6 mr-2 text-muted-foreground" />
+                  <span className="text-muted-foreground">Sources Chart Placeholder</span>
                 </div>
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Feature Usage</h3>
-                  <p className="text-3xl font-bold">68%</p>
-                  <p className="text-xs text-green-500">+4.6% from last week</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Customer Engagement</CardTitle>
+                <CardDescription>
+                  How customers interact with your platform
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-[250px] flex items-center justify-center bg-muted/20">
+                <div className="flex items-center">
+                  <LineChart className="h-6 w-6 mr-2 text-muted-foreground" />
+                  <span className="text-muted-foreground">Engagement Chart Placeholder</span>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="retention">
+          <Card>
+            <CardHeader>
+              <CardTitle>Retention Cohorts</CardTitle>
+              <CardDescription>
+                Customer retention by month cohort
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="h-[500px] flex items-center justify-center bg-muted/20">
+              <div className="flex items-center">
+                <BarChart className="h-6 w-6 mr-2 text-muted-foreground" />
+                <span className="text-muted-foreground">Retention Cohort Placeholder</span>
               </div>
-            </TabsContent>
-            <TabsContent value="growth" className="pt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">New Customers</h3>
-                  <p className="text-3xl font-bold">156</p>
-                  <p className="text-xs text-green-500">+12.4% from last month</p>
-                </div>
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Conversion Rate</h3>
-                  <p className="text-3xl font-bold">24.8%</p>
-                  <p className="text-xs text-green-500">+2.1% from last month</p>
-                </div>
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Growth Rate</h3>
-                  <p className="text-3xl font-bold">7.2%</p>
-                  <p className="text-xs text-green-500">+0.8% from last month</p>
-                </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="segments">
+          <Card>
+            <CardHeader>
+              <CardTitle>Customer Segments</CardTitle>
+              <CardDescription>
+                Retention metrics by customer segment
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="h-[500px] flex items-center justify-center bg-muted/20">
+              <div className="flex items-center">
+                <PieChart className="h-6 w-6 mr-2 text-muted-foreground" />
+                <span className="text-muted-foreground">Segments Chart Placeholder</span>
               </div>
-            </TabsContent>
-            <TabsContent value="retention" className="pt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">1-Month Retention</h3>
-                  <p className="text-3xl font-bold">72%</p>
-                  <p className="text-xs text-green-500">+3.5% from last quarter</p>
-                </div>
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">3-Month Retention</h3>
-                  <p className="text-3xl font-bold">64%</p>
-                  <p className="text-xs text-green-500">+2.8% from last quarter</p>
-                </div>
-                <div className="p-4 border rounded-lg flex flex-col items-center">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Customer Satisfaction</h3>
-                  <p className="text-3xl font-bold">4.7/5</p>
-                  <p className="text-xs text-green-500">+0.2 from last quarter</p>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
