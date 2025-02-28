@@ -6,7 +6,6 @@ import {
   SidebarHeader,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton
@@ -16,11 +15,29 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useEffect } from "react";
 
 const AppSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { collapsed, setCollapsed } = useSidebar();
+  const isMobile = useIsMobile();
+
+  // Auto-collapse sidebar on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setCollapsed(true);
+    }
+  }, [isMobile, setCollapsed]);
+
+  // Close sidebar when navigating on mobile
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    if (isMobile) {
+      setCollapsed(true);
+    }
+  };
 
   const menuItems = [
     {
@@ -46,8 +63,8 @@ const AppSidebar = () => {
   ];
 
   return (
-    <Sidebar className="border-r border-border/40">
-      <SidebarHeader className="py-6 flex items-center justify-between px-4">
+    <Sidebar className="border-r border-border/40 z-20">
+      <SidebarHeader className="py-4 md:py-6 flex items-center justify-between px-4">
         <div className={cn("flex items-center gap-2 transition-opacity", {
           "opacity-0": collapsed,
           "opacity-100": !collapsed
@@ -62,6 +79,7 @@ const AppSidebar = () => {
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
           className="ml-auto"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </Button>
@@ -74,10 +92,11 @@ const AppSidebar = () => {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton
-                    onClick={() => navigate(item.path)}
+                    onClick={() => handleNavigation(item.path)}
                     className={cn({
                       "bg-accent text-accent-foreground font-medium": location.pathname === item.path
                     })}
+                    aria-label={item.title}
                   >
                     <item.icon size={18} />
                     <span>{item.title}</span>
@@ -92,7 +111,7 @@ const AppSidebar = () => {
       <SidebarFooter className="py-4">
         <div className="px-3">
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton aria-label="Help and Support">
               <LifeBuoy size={18} />
               <span>Help & Support</span>
             </SidebarMenuButton>
