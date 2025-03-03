@@ -4,16 +4,16 @@ import BenefitItem from "./BenefitItem";
 
 const BenefitsSection = () => {
   return (
-    <section className="py-20 px-4">
+    <section className="py-16 md:py-20 px-4">
       <div className="container max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">The Benefits You Get</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">The Benefits You Get</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto px-4">
             Unlock powerful insights and tools to transform your customer relationships.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           <BenefitItem 
             icon={CheckCircle}
             title="Increase Customer Lifetime Value"

@@ -7,19 +7,19 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative w-full min-h-[85vh] flex flex-col items-center justify-center overflow-hidden py-12 px-4">
+    <section className="relative w-full min-h-[80vh] flex flex-col items-center justify-center overflow-hidden py-12 px-4 md:min-h-[85vh]">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background pointer-events-none" />
       
-      <div className="container max-w-6xl mx-auto z-10 space-y-10">
+      <div className="container max-w-6xl mx-auto z-10 space-y-8 md:space-y-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className="flex flex-col space-y-6 text-left animate-fade-in">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
+          <div className="flex flex-col space-y-4 md:space-y-6 text-center lg:text-left animate-fade-in">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Customer <span className="text-primary">Retention</span> Platform
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-xl">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0">
               Transform your business with our powerful analytics. Track, analyze and improve your customer metrics in real-time.
             </p>
-            <div className="flex flex-wrap gap-4 mt-4">
+            <div className="flex flex-wrap gap-4 mt-4 justify-center lg:justify-start">
               <Button 
                 size="lg" 
                 onClick={() => navigate("/dashboard")}

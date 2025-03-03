@@ -7,10 +7,10 @@ const CTASection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-r from-primary/10 to-secondary/30">
+    <section className="py-16 md:py-20 px-4 bg-gradient-to-r from-primary/10 to-secondary/30">
       <div className="container max-w-5xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Customer Retention?</h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">Ready to Transform Your Customer Retention?</h2>
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-6 md:mb-8 px-4">
           Join thousands of businesses that have already improved their customer retention metrics with our platform.
         </p>
         <div className="flex flex-wrap justify-center gap-4">

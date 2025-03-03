@@ -24,16 +24,16 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background to-secondary/30">
+    <section className="py-16 md:py-20 px-4 bg-gradient-to-b from-background to-secondary/30">
       <div className="container max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Customers Say</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">What Our Customers Say</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto px-4">
             Don't just take our word for it. See how our platform has helped businesses like yours.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {testimonials.map((testimonial, index) => (
             <TestimonialItem
               key={index}

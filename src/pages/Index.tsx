@@ -8,7 +8,7 @@ import Footer from "@/components/landing/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted overflow-x-hidden">
       <HeroSection />
       <FeaturesSection />
       <BenefitsSection />
