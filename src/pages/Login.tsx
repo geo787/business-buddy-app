@@ -6,18 +6,49 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, LogIn, User } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, you would validate credentials here
-    // For now, let's simulate a successful login and redirect to dashboard
-    navigate("/dashboard");
+    
+    // Basic validation
+    if (!email.trim() || !password.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter both email and password",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Success toast before redirect
+    toast({
+      title: "Success",
+      description: "Login successful!",
+    });
+    
+    // Simulate successful login and redirect to dashboard
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
   };
 
   return (
@@ -105,7 +136,9 @@ const Login = () => {
       </Card>
 
       <div className="mt-12 bg-white rounded-full px-8 py-3 cursor-pointer hover:bg-gray-100 transition-colors">
-        <p className="text-blue-600 font-semibold">SWIPE UP</p>
+        <Link to="/">
+          <p className="text-blue-600 font-semibold">BACK TO HOME</p>
+        </Link>
       </div>
     </div>
   );
