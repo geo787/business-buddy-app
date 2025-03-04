@@ -14,11 +14,13 @@ const Index = () => {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
-        <img 
-          src="/lovable-uploads/780c12b9-63d2-49df-bf17-c8f6a083cbd0.png" 
-          alt="Business Buddy Logo" 
-          className="w-24 h-24 mb-4 object-contain" 
-        />
+        <div className="mb-4">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
         <h1 className="text-4xl font-bold mb-2">Customer</h1>
         <h1 className="text-4xl font-bold mb-6">Retention Platform</h1>
         
