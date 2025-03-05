@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { User, Bell, Lock, Globe, Mail, Shield, Brush } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -31,7 +31,7 @@ const Settings = () => {
 
   // Check if dark mode is enabled on initial load
   useEffect(() => {
-    // Check if dark mode is enabled
+    // Check if dark mode is enabled in document
     const isDarkMode = document.documentElement.classList.contains('dark');
     setDarkMode(isDarkMode);
   }, []);
@@ -42,15 +42,19 @@ const Settings = () => {
     
     if (checked) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
       toast({
         title: "Dark Mode Enabled",
         description: "Application is now in dark mode",
+        duration: 3000,
       });
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
       toast({
         title: "Light Mode Enabled",
         description: "Application is now in light mode",
+        duration: 3000,
       });
     }
   };
@@ -59,6 +63,7 @@ const Settings = () => {
     toast({
       title: "Settings Saved",
       description: "Your settings have been updated successfully",
+      duration: 3000,
     });
   };
 

@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const { toast } = useToast();
@@ -10,6 +10,7 @@ const Index = () => {
     toast({
       title: "Demo Access",
       description: "A demo link has been sent to your email.",
+      duration: 5000,
     });
   };
 

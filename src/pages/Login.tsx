@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, LogIn, User } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +25,8 @@ const Login = () => {
       toast({
         title: "Error",
         description: "Please enter both email and password",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000,
       });
       return;
     }
@@ -36,7 +37,8 @@ const Login = () => {
       toast({
         title: "Error",
         description: "Please enter a valid email address",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000,
       });
       return;
     }
@@ -45,6 +47,7 @@ const Login = () => {
     toast({
       title: "Success",
       description: "Login successful!",
+      duration: 3000,
     });
     
     // Simulate successful login and redirect to dashboard
@@ -60,7 +63,8 @@ const Login = () => {
       toast({
         title: "Error",
         description: "Please enter your email address",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000,
       });
       return;
     }
@@ -71,7 +75,8 @@ const Login = () => {
       toast({
         title: "Error",
         description: "Please enter a valid email address",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000,
       });
       return;
     }
@@ -79,9 +84,14 @@ const Login = () => {
     toast({
       title: "Password Reset",
       description: "If your email is registered, you'll receive reset instructions shortly.",
+      duration: 5000,
     });
     
-    setShowForgotPassword(false);
+    // Reset the form state and go back to login after 2 seconds
+    setTimeout(() => {
+      setShowForgotPassword(false);
+      setResetEmail("");
+    }, 2000);
   };
 
   return (
