@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -20,12 +20,47 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { User, Bell, Lock, Globe, Mail, Shield, Brush } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const Settings = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [dataSharing, setDataSharing] = useState(true);
+  const { toast } = useToast();
+
+  // Check if dark mode is enabled on initial load
+  useEffect(() => {
+    // Check if dark mode is enabled
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    setDarkMode(isDarkMode);
+  }, []);
+
+  // Handle dark mode toggle
+  const handleDarkModeToggle = (checked: boolean) => {
+    setDarkMode(checked);
+    
+    if (checked) {
+      document.documentElement.classList.add('dark');
+      toast({
+        title: "Dark Mode Enabled",
+        description: "Application is now in dark mode",
+      });
+    } else {
+      document.documentElement.classList.remove('dark');
+      toast({
+        title: "Light Mode Enabled",
+        description: "Application is now in light mode",
+      });
+    }
+  };
+
+  const handleSaveChanges = () => {
+    toast({
+      title: "Settings Saved",
+      description: "Your settings have been updated successfully",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -77,7 +112,7 @@ const Settings = () => {
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
               <Button variant="outline" className="w-full sm:w-auto">Cancel</Button>
-              <Button className="w-full sm:w-auto">Save Changes</Button>
+              <Button className="w-full sm:w-auto" onClick={handleSaveChanges}>Save Changes</Button>
             </CardFooter>
           </Card>
 
@@ -103,7 +138,7 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full sm:w-auto">Update Password</Button>
+              <Button className="w-full sm:w-auto" onClick={handleSaveChanges}>Update Password</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -140,6 +175,10 @@ const Settings = () => {
                   onCheckedChange={setPushNotifications} 
                 />
               </div>
+              
+              <Button className="mt-4" onClick={handleSaveChanges}>
+                Save Notification Settings
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -159,7 +198,7 @@ const Settings = () => {
                 <Switch 
                   id="darkMode" 
                   checked={darkMode} 
-                  onCheckedChange={setDarkMode} 
+                  onCheckedChange={handleDarkModeToggle} 
                 />
               </div>
               
@@ -176,6 +215,10 @@ const Settings = () => {
                   onCheckedChange={setDataSharing} 
                 />
               </div>
+              
+              <Button className="mt-4" onClick={handleSaveChanges}>
+                Save Appearance Settings
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

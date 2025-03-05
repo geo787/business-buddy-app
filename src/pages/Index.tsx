@@ -1,8 +1,18 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
+
+  const handleViewDemo = () => {
+    toast({
+      title: "Demo Access",
+      description: "A demo link has been sent to your email.",
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
       {/* Header with login button */}
@@ -39,7 +49,11 @@ const Index = () => {
             </Button>
           </Link>
           
-          <Button variant="ghost" className="text-gray-600">
+          <Button 
+            variant="ghost" 
+            className="text-gray-600"
+            onClick={handleViewDemo}
+          >
             View Demo
           </Button>
         </div>
