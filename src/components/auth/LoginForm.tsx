@@ -128,8 +128,8 @@ const LoginForm = ({ onForgotPassword }: LoginFormProps) => {
           </Button>
           <p className="text-center text-sm">
             Don't have an account?{" "}
-            <Link to="/" className="text-primary hover:underline">
-              Start a free trial
+            <Link to="/register" className="text-primary hover:underline">
+              Sign Up
             </Link>
           </p>
         </CardFooter>

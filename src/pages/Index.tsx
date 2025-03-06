@@ -16,10 +16,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
-      {/* Header with login button */}
-      <div className="container mx-auto px-4 py-4 flex justify-end">
+      {/* Header with login/register buttons */}
+      <div className="container mx-auto px-4 py-4 flex justify-end space-x-4">
         <Link to="/login">
           <Button variant="outline">Login</Button>
+        </Link>
+        <Link to="/register">
+          <Button>Register</Button>
         </Link>
       </div>
 
@@ -41,7 +44,7 @@ const Index = () => {
         </p>
         
         <div className="flex flex-col gap-4 items-center">
-          <Link to="/login">
+          <Link to="/register">
             <Button className="px-8 py-6 text-lg flex items-center gap-2">
               Start Now 
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
