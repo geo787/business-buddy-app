@@ -20,7 +20,7 @@ const Index = () => {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="h-10 w-10 bg-blue-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-xl">CR</span>
+            <span className="text-white font-bold text-xl">BB</span>
           </div>
           <span className="font-bold text-xl text-blue-600">BUSINESS BUDDY</span>
         </div>
@@ -37,11 +37,9 @@ const Index = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
         <div className="mb-4">
-          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M2 17L12 22L22 17" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M2 12L12 17L22 12" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <div className="h-20 w-20 bg-blue-600 rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-3xl">BB</span>
+          </div>
         </div>
         <h1 className="text-4xl font-bold mb-2">Customer</h1>
         <h1 className="text-4xl font-bold mb-6">Retention Platform</h1>
