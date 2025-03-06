@@ -19,8 +19,12 @@ const Index = () => {
       {/* Header with logo and login/register buttons */}
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <div className="h-10 w-10 bg-blue-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-xl">BB</span>
+          <div className="h-10 w-10 bg-blue-600 rounded-md flex items-center justify-center overflow-hidden">
+            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="#2563EB" />
+              <path d="M30 30H50C61 30 70 39 70 50C70 61 61 70 50 70H30V30Z" fill="white"/>
+              <path d="M50 50H70V70H50V50Z" fill="white"/>
+            </svg>
           </div>
           <span className="font-bold text-xl text-blue-600">BUSINESS BUDDY</span>
         </div>
@@ -37,8 +41,12 @@ const Index = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
         <div className="mb-4">
-          <div className="h-20 w-20 bg-blue-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-3xl">BB</span>
+          <div className="h-20 w-20 bg-blue-600 rounded-md flex items-center justify-center overflow-hidden">
+            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="#2563EB" />
+              <path d="M30 30H50C61 30 70 39 70 50C70 61 61 70 50 70H30V30Z" fill="white"/>
+              <path d="M50 50H70V70H50V50Z" fill="white"/>
+            </svg>
           </div>
         </div>
         <h1 className="text-4xl font-bold mb-2">Customer</h1>
