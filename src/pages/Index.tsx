@@ -16,14 +16,22 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
-      {/* Header with login/register buttons */}
-      <div className="container mx-auto px-4 py-4 flex justify-end space-x-4">
-        <Link to="/login">
-          <Button variant="outline">Login</Button>
-        </Link>
-        <Link to="/register">
-          <Button>Register</Button>
-        </Link>
+      {/* Header with logo and login/register buttons */}
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <div className="h-10 w-10 bg-blue-600 rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-xl">CR</span>
+          </div>
+          <span className="font-bold text-xl text-blue-600">BUSINESS BUDDY</span>
+        </div>
+        <div className="flex space-x-4">
+          <Link to="/login">
+            <Button variant="outline">Login</Button>
+          </Link>
+          <Link to="/register">
+            <Button>Register</Button>
+          </Link>
+        </div>
       </div>
 
       {/* Main content */}
