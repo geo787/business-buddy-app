@@ -2,16 +2,64 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Index = () => {
   const { toast } = useToast();
+  const [showDemoModal, setShowDemoModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
   const handleViewDemo = () => {
-    toast({
-      title: "Demo Access",
-      description: "A demo link has been sent to your email.",
-      duration: 5000,
-    });
+    setShowDemoModal(true);
+    setEmail("");
+    setEmailError("");
+  };
+
+  const handleSendDemo = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate email
+    if (!email.trim()) {
+      setEmailError("Email is required");
+      return;
+    }
+    
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+    
+    setEmailError("");
+    setIsSubmitting(true);
+    
+    // Simulate API call to send demo link
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowDemoModal(false);
+      
+      toast({
+        title: "Demo Link Sent",
+        description: `A demo link has been sent to ${email}. Please check your inbox.`,
+        duration: 5000,
+      });
+    }, 1500);
   };
 
   return (
@@ -76,6 +124,47 @@ const Index = () => {
           </Button>
         </div>
       </div>
+
+      {/* Demo Request Modal */}
+      <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Request Demo Access</DialogTitle>
+            <DialogDescription>
+              Enter your email address to receive a link to our interactive demo.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleSendDemo} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-right">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className={emailError ? "border-red-500" : ""}
+              />
+              {emailError && (
+                <p className="text-sm text-red-500">{emailError}</p>
+              )}
+            </div>
+            
+            <DialogFooter>
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full"
+              >
+                {isSubmitting ? "Sending..." : "Send Demo Link"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
