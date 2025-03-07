@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, LogIn, User, Mail } from "lucide-react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const RegisterForm = () => {
@@ -93,17 +93,16 @@ const RegisterForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Create Account</CardTitle>
-        <CardDescription className="text-center">
-          Fill in your details to sign up for an account
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={handleRegister}>
+    <Card className="w-full max-w-md bg-white">
+      <div className="text-center py-6">
+        <h1 className="text-2xl font-bold text-primary">Business Buddy</h1>
+        <p className="text-sm text-gray-600 uppercase tracking-wider">CUSTOMER RETENTION PLATFORM</p>
+      </div>
+      
+      <form onSubmit={handleRegister} className="signup-form">
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <Input
                 id="email"
@@ -112,9 +111,7 @@ const RegisterForm = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10"
               />
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
             </div>
           </div>
           
@@ -128,9 +125,7 @@ const RegisterForm = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10"
               />
-              <LogIn className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
               <Button
                 type="button"
                 variant="ghost"
@@ -145,6 +140,9 @@ const RegisterForm = () => {
                 )}
               </Button>
             </div>
+            <small className="text-xs text-gray-500">
+              Use 8+ characters with a mix of letters, numbers, and symbols.
+            </small>
           </div>
           
           <div className="space-y-2">
@@ -157,9 +155,7 @@ const RegisterForm = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="pl-10"
               />
-              <LogIn className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
               <Button
                 type="button"
                 variant="ghost"
@@ -190,19 +186,24 @@ const RegisterForm = () => {
             >
               I agree to the{" "}
               <Link to="#" className="text-primary hover:underline">
-                Terms and Conditions
+                Terms & Conditions
               </Link>
             </label>
           </div>
         </CardContent>
+        
         <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full">
-            Sign Up
+          <Button 
+            type="submit" 
+            className="w-full py-6 text-base font-medium"
+          >
+            Create Account
           </Button>
+          
           <p className="text-center text-sm">
             Already have an account?{" "}
             <Link to="/login" className="text-primary hover:underline">
-              Sign In
+              Log in
             </Link>
           </p>
         </CardFooter>
