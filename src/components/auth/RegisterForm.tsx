@@ -102,12 +102,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md bg-white shadow-lg rounded-xl border-0">
-      <div className="text-center py-6">
-        <h1 className="text-2xl font-bold text-primary">Business Buddy</h1>
-        <p className="text-sm text-gray-600 uppercase tracking-wider">CUSTOMER RETENTION PLATFORM</p>
-      </div>
-      
+    <Card className="w-full max-w-md bg-white shadow-xl rounded-xl border-0">      
       <form onSubmit={handleRegister} className="signup-form">
         <CardContent className="space-y-4 p-6">
           {/* Social Login */}
@@ -224,7 +219,7 @@ const RegisterForm = () => {
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I agree to the{" "}
-              <Link to="#" className="text-primary hover:underline">
+              <Link to="#" className="text-blue-600 hover:underline">
                 Terms & Conditions
               </Link>
             </label>
