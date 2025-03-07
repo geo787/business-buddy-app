@@ -13,11 +13,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const Index = () => {
   const { toast } = useToast();
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
 
@@ -30,9 +34,47 @@ const Index = () => {
     setShowDemoModal(true);
     setEmail("");
     setEmailError("");
+    setName("");
+    setBusinessType("");
+    setMessage("");
   };
 
-  const handleSendDemo = (e: React.FormEvent) => {
+  const sendEmailToUser = async (userEmail: string, userName: string) => {
+    try {
+      // Here we would normally connect to an email service API
+      // This is a placeholder for actual API integration
+      // Example of how it would look with a real service:
+      /*
+      const response = await fetch('https://api.emailservice.com/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        body: JSON.stringify({
+          to: userEmail,
+          subject: 'Your Business Buddy Demo',
+          html: `<p>Hello ${userName},</p>
+                <p>Thank you for your interest in Business Buddy!</p>
+                <p>You can access your demo at: <a href="https://demo.businessbuddy.com/access?token=DEMO_TOKEN">https://demo.businessbuddy.com/access</a></p>
+                <p>The demo will be active for 14 days.</p>
+                <p>If you have any questions, please reply to this email.</p>
+                <p>Best regards,<br>The Business Buddy Team</p>`
+        })
+      });
+      return response.ok;
+      */
+      
+      // For now, simulate a successful email sending
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return true;
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return false;
+    }
+  };
+
+  const handleSendDemo = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate email
@@ -49,17 +91,42 @@ const Index = () => {
     setEmailError("");
     setIsSubmitting(true);
     
-    // Simulate API call to send demo link
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowDemoModal(false);
+    // Send actual email
+    const success = await sendEmailToUser(email, name);
+    
+    setIsSubmitting(false);
+    setShowDemoModal(false);
+    
+    if (success) {
+      // Store user information for later follow-up
+      const demoRequest = {
+        email,
+        name,
+        businessType,
+        message,
+        requestedAt: new Date().toISOString()
+      };
+      
+      // In a real implementation, we would save this to a database
+      // For now, log it to console and store in localStorage
+      console.log("Demo request:", demoRequest);
+      
+      const existingRequests = JSON.parse(localStorage.getItem('demoRequests') || '[]');
+      localStorage.setItem('demoRequests', JSON.stringify([...existingRequests, demoRequest]));
       
       toast({
         title: "Demo Link Sent",
         description: `A demo link has been sent to ${email}. Please check your inbox.`,
         duration: 5000,
       });
-    }, 1500);
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to send demo link. Please try again later.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -127,18 +194,18 @@ const Index = () => {
 
       {/* Demo Request Modal */}
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Request Demo Access</DialogTitle>
             <DialogDescription>
-              Enter your email address to receive a link to our interactive demo.
+              Enter your details to receive a link to our interactive demo and explore how Business Buddy can help your business.
             </DialogDescription>
           </DialogHeader>
           
           <form onSubmit={handleSendDemo} className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-right">
-                Email
+                Email <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="email"
@@ -147,10 +214,50 @@ const Index = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 className={emailError ? "border-red-500" : ""}
+                required
               />
               {emailError && (
                 <p className="text-sm text-red-500">{emailError}</p>
               )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                Your Name
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="John Doe"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="businessType">
+                Business Type
+              </Label>
+              <Input
+                id="businessType"
+                type="text"
+                value={businessType}
+                onChange={(e) => setBusinessType(e.target.value)}
+                placeholder="E-commerce, SaaS, Retail, etc."
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="message">
+                Additional Notes
+              </Label>
+              <Textarea
+                id="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Let us know your specific business needs..."
+                rows={3}
+              />
             </div>
             
             <DialogFooter>
