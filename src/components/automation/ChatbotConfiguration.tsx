@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,9 +14,12 @@ interface Intent {
   response: string;
 }
 
-const ChatbotConfiguration = () => {
-  const { toast } = useToast();
-  const [intents, setIntents] = useState<Intent[]>([
+const getStoredIntents = (): Intent[] => {
+  const storedIntents = localStorage.getItem('chatbot-intents');
+  if (storedIntents) {
+    return JSON.parse(storedIntents);
+  }
+  return [
     {
       id: "1",
       name: "check_order_status",
@@ -38,12 +40,20 @@ const ChatbotConfiguration = () => {
       ],
       response: "Profitul tău a fost de 45.000 RON în ultimele 3 luni. Poți vedea graficul detaliat accesând secțiunea Analytics din dashboard."
     }
-  ]);
-  
+  ];
+};
+
+const ChatbotConfiguration = () => {
+  const { toast } = useToast();
+  const [intents, setIntents] = useState<Intent[]>(getStoredIntents());
   const [currentIntent, setCurrentIntent] = useState<Intent | null>(null);
   const [newPhrase, setNewPhrase] = useState("");
   const [isAddingPhrase, setIsAddingPhrase] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('chatbot-intents', JSON.stringify(intents));
+  }, [intents]);
 
   const handleAddNewIntent = () => {
     const newIntent: Intent = {

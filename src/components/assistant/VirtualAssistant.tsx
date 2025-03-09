@@ -13,11 +13,43 @@ interface Message {
   timestamp: Date;
 }
 
-interface SampleResponse {
-  keywords: string[];
+interface Intent {
+  id: string;
+  name: string;
+  category: "banking" | "logistics";
+  trainingPhrases: string[];
   response: string;
-  type: 'banking' | 'logistics' | 'general';
 }
+
+// Get intents from localStorage or use defaults
+const getStoredIntents = (): Intent[] => {
+  const storedIntents = localStorage.getItem('chatbot-intents');
+  if (storedIntents) {
+    return JSON.parse(storedIntents);
+  }
+  return [
+    {
+      id: "1",
+      name: "check_order_status",
+      category: "logistics",
+      trainingPhrases: [
+        "Unde este comanda mea?",
+        "Status pentru comanda #123"
+      ],
+      response: "Comanda este în depozitul nostru. Va fi expediată mâine."
+    },
+    {
+      id: "2",
+      name: "check_profit",
+      category: "banking",
+      trainingPhrases: [
+        "Cât a fost profitul în ultimele 3 luni?",
+        "Arată-mi profitul trimestrial"
+      ],
+      response: "Profitul tău a fost de 45.000 RON în ultimele 3 luni. Poți vedea graficul detaliat accesând secțiunea Analytics din dashboard."
+    }
+  ];
+};
 
 const VirtualAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,48 +65,59 @@ const VirtualAssistant = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const [intents] = useState<Intent[]>(getStoredIntents());
 
-  // Sample responses database
-  const sampleResponses: SampleResponse[] = [
-    {
-      keywords: ['profit', 'ultimele', 'luni'],
-      response: 'Profitul tău a fost de 45.000 RON în ultimele 3 luni. Poți vedea graficul detaliat accesând secțiunea Analytics din dashboard.',
-      type: 'banking'
-    },
-    {
-      keywords: ['flux', 'numerar', 'optimizez'],
-      response: 'Pentru optimizarea fluxului de numerar, vă recomand: 1) Monitorizarea zilnică a intrărilor și ieșirilor, 2) Implementarea unor termene de plată mai scurte pentru clienți, 3) Negocierea termenelor mai lungi cu furnizorii. Doriți un raport detaliat despre fluxul actual?',
-      type: 'banking'
-    },
-    {
-      keywords: ['comanda', 'unde', 'tracking'],
-      response: 'Comanda #1234 este în tranzit către București. Timp estimat de sosire: 2 ore. Puteți urmări în timp real poziția pe hartă din secțiunea Comenzi.',
-      type: 'logistics'
-    },
-    {
-      keywords: ['cost', 'transport', 'reduc'],
-      response: 'Analizând datele dvs. de transport, puteți reduce costurile cu aproximativ 20% folosind ruta alternativă prin Ploiești și consolidând livrările de marți și joi. Doriți să generez un raport detaliat?',
-      type: 'logistics'
-    },
-    {
-      keywords: ['raport', 'cheltuieli', 'generează'],
-      response: 'Am generat un raport detaliat al cheltuielilor pentru ultima lună. Cele mai mari cheltuieli au fost pentru logistică (35%) și personal (28%). Raportul complet este disponibil în dashboard-ul dvs.',
-      type: 'banking'
-    }
-  ];
-
-  // Function to get AI response based on user input
-  const getAIResponse = (userMessage: string): string => {
+  // Function to find matching intent based on user input
+  const findMatchingIntent = (userMessage: string): Intent | null => {
     const messageLower = userMessage.toLowerCase();
     
-    // Check for matching keywords in sample responses
-    for (const sample of sampleResponses) {
-      if (sample.keywords.some(keyword => messageLower.includes(keyword.toLowerCase()))) {
-        return sample.response;
+    for (const intent of intents) {
+      for (const phrase of intent.trainingPhrases) {
+        if (messageLower.includes(phrase.toLowerCase()) || 
+            getLevenshteinDistance(messageLower, phrase.toLowerCase()) < 3) {
+          return intent;
+        }
       }
     }
     
-    // Default response if no keywords match
+    return null;
+  };
+
+  // Simple Levenshtein distance implementation for fuzzy matching
+  const getLevenshteinDistance = (a: string, b: string): number => {
+    const matrix: number[][] = Array(a.length + 1).fill(null).map(() => Array(b.length + 1).fill(null));
+    
+    for (let i = 0; i <= a.length; i++) {
+      matrix[i][0] = i;
+    }
+    
+    for (let j = 0; j <= b.length; j++) {
+      matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j] + 1,        // deletion
+          matrix[i][j - 1] + 1,        // insertion
+          matrix[i - 1][j - 1] + cost  // substitution
+        );
+      }
+    }
+    
+    return matrix[a.length][b.length];
+  };
+
+  // Function to get AI response based on user input
+  const getAIResponse = (userMessage: string): string => {
+    const matchingIntent = findMatchingIntent(userMessage);
+    
+    if (matchingIntent) {
+      return matchingIntent.response;
+    }
+    
+    // Default response if no intent matches
     return "Îmi pare rău, nu am suficiente informații pentru a răspunde la această întrebare specifică. Vă pot ajuta cu informații despre fluxul de numerar, rapoarte financiare, tracking de comenzi sau optimizare de costuri.";
   };
 
@@ -106,7 +149,7 @@ const VirtualAssistant = () => {
       
       setMessages(prev => [...prev, assistantMessage]);
       setIsTyping(false);
-    }, 1500);
+    }, 1000);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -123,11 +166,37 @@ const VirtualAssistant = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Quick reply shortcuts
+  const quickReplies = [
+    {
+      icon: <TrendingUp className="text-primary" size={20} />,
+      text: "Optimizare flux numerar",
+      message: "Cum pot optimiza fluxul de numerar?"
+    },
+    {
+      icon: <BarChart3 className="text-primary" size={20} />,
+      text: "Raport cheltuieli",
+      message: "Generează un raport de cheltuieli"
+    },
+    {
+      icon: <Truck className="text-primary" size={20} />,
+      text: "Tracking comandă",
+      message: "Unde este comanda #1234?"
+    }
+  ];
+
+  const handleQuickReply = (message: string) => {
+    setInputMessage(message);
+    setTimeout(() => {
+      handleSendMessage();
+    }, 100);
+  };
+
   return (
     <>
-      {/* Chat button */}
+      {/* Chat button - fixed on the automation page */}
       <Button
-        className="fixed bottom-6 right-6 rounded-full p-4 h-14 w-14 flex items-center justify-center shadow-lg"
+        className="fixed bottom-6 right-6 rounded-full p-4 h-14 w-14 flex items-center justify-center shadow-lg z-50"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <XCircle size={24} /> : <Bot size={24} />}
@@ -135,7 +204,7 @@ const VirtualAssistant = () => {
 
       {/* Chat window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-96 shadow-xl h-[500px] flex flex-col">
+        <Card className="fixed bottom-24 right-6 w-96 shadow-xl h-[500px] flex flex-col z-50">
           <CardHeader className="bg-primary text-white">
             <CardTitle className="flex items-center gap-2">
               <Bot size={20} />
@@ -155,7 +224,7 @@ const VirtualAssistant = () => {
                   className={`max-w-[80%] p-3 rounded-lg ${
                     message.sender === 'user'
                       ? 'bg-primary text-white rounded-tr-none'
-                      : 'bg-gray-100 rounded-tl-none'
+                      : 'bg-gray-100 dark:bg-gray-800 rounded-tl-none'
                   }`}
                 >
                   {message.content}
@@ -165,7 +234,7 @@ const VirtualAssistant = () => {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
+                <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg rounded-tl-none max-w-[80%]">
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
                     <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
@@ -196,36 +265,19 @@ const VirtualAssistant = () => {
 
       {/* Quick shortcuts */}
       {isOpen && (
-        <div className="fixed bottom-24 left-6 flex flex-col space-y-2">
-          <Card className="p-4 shadow-lg cursor-pointer hover:bg-gray-50 transition-all">
-            <div className="flex items-center gap-2" onClick={() => {
-              setInputMessage("Cum pot optimiza fluxul de numerar?");
-              handleSendMessage();
-            }}>
-              <TrendingUp className="text-primary" size={20} />
-              <span className="text-sm">Optimizare flux numerar</span>
-            </div>
-          </Card>
-          
-          <Card className="p-4 shadow-lg cursor-pointer hover:bg-gray-50 transition-all">  
-            <div className="flex items-center gap-2" onClick={() => {
-              setInputMessage("Generează un raport de cheltuieli");
-              handleSendMessage();
-            }}>
-              <BarChart3 className="text-primary" size={20} />
-              <span className="text-sm">Raport cheltuieli</span>
-            </div>
-          </Card>
-          
-          <Card className="p-4 shadow-lg cursor-pointer hover:bg-gray-50 transition-all">
-            <div className="flex items-center gap-2" onClick={() => {
-              setInputMessage("Unde este comanda #1234?");
-              handleSendMessage();
-            }}>
-              <Truck className="text-primary" size={20} />
-              <span className="text-sm">Tracking comandă</span>
-            </div>
-          </Card>
+        <div className="fixed bottom-24 left-6 flex flex-col space-y-2 z-50">
+          {quickReplies.map((reply, index) => (
+            <Card 
+              key={index}
+              className="p-4 shadow-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+              onClick={() => handleQuickReply(reply.message)}
+            >
+              <div className="flex items-center gap-2">
+                {reply.icon}
+                <span className="text-sm">{reply.text}</span>
+              </div>
+            </Card>
+          ))}
         </div>
       )}
     </>

@@ -2,10 +2,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquareCode, Bot, Workflow } from "lucide-react";
 import ChatbotConfiguration from "@/components/automation/ChatbotConfiguration";
+import VirtualAssistant from "@/components/assistant/VirtualAssistant";
+import { useState } from "react";
 
 const Automation = () => {
+  const [assistantVisible, setAssistantVisible] = useState(true);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">Automation</h1>
         <p className="text-muted-foreground">
@@ -24,6 +28,15 @@ const Automation = () => {
         </TabsList>
         
         <TabsContent value="chatbot">
+          <div className="mb-4 flex justify-end">
+            <button
+              onClick={() => setAssistantVisible(!assistantVisible)}
+              className="text-sm text-primary flex items-center gap-1"
+            >
+              <Bot className="h-4 w-4" />
+              {assistantVisible ? "Ascunde asistentul" : "Arată asistentul"}
+            </button>
+          </div>
           <ChatbotConfiguration />
         </TabsContent>
         
@@ -38,6 +51,9 @@ const Automation = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Render the VirtualAssistant component regardless of the tab */}
+      {assistantVisible && <VirtualAssistant />}
     </div>
   );
 };
