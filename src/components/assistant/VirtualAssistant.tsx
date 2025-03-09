@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Bot, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Message } from "@/models/Message";
-import { Intent, getStoredIntents } from "@/models/Intent";
-import { getAIResponse } from "@/utils/chatUtils";
+import { Intent, getStoredIntents, getStoredAnalytics, saveAnalytics } from "@/models/Intent";
+import { getAdvancedAIResponse } from "@/utils/nlpUtils";
 import ChatWindow from "./ChatWindow";
 import QuickReplies from "./QuickReplies";
 
@@ -22,6 +22,18 @@ const VirtualAssistant = () => {
   const [isTyping, setIsTyping] = useState(false);
   const { toast } = useToast();
   const [intents] = useState<Intent[]>(getStoredIntents());
+  const [sessionActive, setSessionActive] = useState(false);
+
+  // Start a new session when the chat is opened
+  useEffect(() => {
+    if (isOpen && !sessionActive) {
+      const analytics = getStoredAnalytics();
+      analytics.sessionsCount = (analytics.sessionsCount || 0) + 1;
+      analytics.lastSessionDate = new Date();
+      saveAnalytics(analytics);
+      setSessionActive(true);
+    }
+  }, [isOpen, sessionActive]);
 
   const handleSendMessage = (inputMessage: string) => {
     if (!inputMessage.trim()) return;
@@ -37,20 +49,29 @@ const VirtualAssistant = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
     
-    // Simulate AI thinking and typing
+    // Simulate AI thinking and typing with slightly longer timeout for more complex processing
     setTimeout(() => {
-      const aiResponse = getAIResponse(inputMessage, intents);
+      const { response, matchedIntent } = getAdvancedAIResponse(inputMessage, intents);
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: aiResponse,
+        content: response,
         sender: 'assistant',
         timestamp: new Date(),
       };
       
       setMessages(prev => [...prev, assistantMessage]);
       setIsTyping(false);
-    }, 1000);
+      
+      // Show toast notification when matched to an intent
+      if (matchedIntent) {
+        toast({
+          title: "Intent identificat",
+          description: `Asistentul a identificat intent-ul: ${matchedIntent.name}`,
+          duration: 3000,
+        });
+      }
+    }, 1200);
   };
 
   const handleQuickReply = (message: string) => {
@@ -63,7 +84,7 @@ const VirtualAssistant = () => {
     <>
       {/* Chat button - fixed on the automation page */}
       <Button
-        className="fixed bottom-6 right-6 rounded-full p-4 h-14 w-14 flex items-center justify-center shadow-lg z-50"
+        className="fixed bottom-6 right-6 rounded-full p-4 h-14 w-14 flex items-center justify-center shadow-lg z-50 bg-gradient-to-r from-primary to-primary/80"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <XCircle size={24} /> : <Bot size={24} />}

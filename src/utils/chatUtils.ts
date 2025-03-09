@@ -1,7 +1,8 @@
 
 import { Intent } from "@/models/Intent";
+import { getAdvancedAIResponse } from "./nlpUtils";
 
-// Simple Levenshtein distance implementation for fuzzy matching
+// Simple Levenshtein distance implementation for fuzzy matching (legacy)
 export const getLevenshteinDistance = (a: string, b: string): number => {
   const matrix: number[][] = Array(a.length + 1).fill(null).map(() => Array(b.length + 1).fill(null));
   
@@ -27,7 +28,7 @@ export const getLevenshteinDistance = (a: string, b: string): number => {
   return matrix[a.length][b.length];
 };
 
-// Function to find matching intent based on user input
+// Legacy function to find matching intent based on user input
 export const findMatchingIntent = (userMessage: string, intents: Intent[]): Intent | null => {
   const messageLower = userMessage.toLowerCase();
   
@@ -43,14 +44,8 @@ export const findMatchingIntent = (userMessage: string, intents: Intent[]): Inte
   return null;
 };
 
-// Function to get AI response based on user input
+// Function to get AI response based on user input - now calls the advanced implementation
 export const getAIResponse = (userMessage: string, intents: Intent[]): string => {
-  const matchingIntent = findMatchingIntent(userMessage, intents);
-  
-  if (matchingIntent) {
-    return matchingIntent.response;
-  }
-  
-  // Default response if no intent matches
-  return "Îmi pare rău, nu am suficiente informații pentru a răspunde la această întrebare specifică. Vă pot ajuta cu informații despre fluxul de numerar, rapoarte financiare, tracking de comenzi sau optimizare de costuri.";
+  const { response } = getAdvancedAIResponse(userMessage, intents);
+  return response;
 };

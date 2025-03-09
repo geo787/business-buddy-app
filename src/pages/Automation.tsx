@@ -13,7 +13,7 @@ const Automation = () => {
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">Automation</h1>
         <p className="text-muted-foreground">
-          Configure AI chatbots and automation workflows for your business.
+          Configurează chatbot-ul AI cu inteligență artificială pentru asistența clienților tăi
         </p>
       </div>
 
