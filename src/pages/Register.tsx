@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import RegisterForm from "@/components/auth/RegisterForm";
+import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 
 const Register = () => {
   return (
@@ -31,6 +32,9 @@ const Register = () => {
           </button>
         </Link>
       </div>
+      
+      {/* Add the virtual assistant component */}
+      <VirtualAssistant />
     </div>
   );
 };
