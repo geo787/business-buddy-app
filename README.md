@@ -54,6 +54,7 @@ npm run dev
 
 This project is built with.
 
+- HTML
 - Vite
 - TypeScript
 - React
