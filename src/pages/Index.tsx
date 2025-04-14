@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Discord } from "lucide-react";
+import { DiscordLogo } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -104,7 +104,7 @@ const Index = () => {
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="h-12 w-12 bg-[#5865F2] rounded-md flex items-center justify-center">
-            <Discord size={32} color="white" strokeWidth={1.5} />
+            <DiscordLogo size={32} color="white" strokeWidth={1.5} />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-xl text-blue-600">BUSINESS BUDDY</span>
@@ -124,7 +124,7 @@ const Index = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-4 text-center pt-16 pb-24">
         <div className="mb-6">
           <div className="h-24 w-24 bg-[#5865F2] rounded-md flex items-center justify-center">
-            <Discord size={56} color="white" strokeWidth={1.5} />
+            <DiscordLogo size={56} color="white" strokeWidth={1.5} />
           </div>
         </div>
         
