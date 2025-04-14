@@ -1,13 +1,13 @@
 
 import React from "react";
-import { DiscordLogo } from "lucide-react";  // Changed from 'Discord'
+import { Discord } from "lucide-react";  // Changed from 'DiscordLogo'
 
 const LoginHeader = () => {
   return (
     <div className="w-full max-w-md flex flex-col items-center text-white mb-8">
       <div className="mb-4">
         <div className="h-16 w-16 bg-[#5865F2] rounded-md flex items-center justify-center">
-          <DiscordLogo size={40} color="white" strokeWidth={1.5} />
+          <Discord size={40} color="white" strokeWidth={1.5} />
         </div>
       </div>
       <h1 className="text-3xl font-bold text-center">BUSINESS BUDDY</h1>
@@ -17,4 +17,3 @@ const LoginHeader = () => {
 };
 
 export default LoginHeader;
-
