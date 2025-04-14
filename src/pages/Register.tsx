@@ -1,19 +1,15 @@
-
 import { Link } from "react-router-dom";
 import RegisterForm from "@/components/auth/RegisterForm";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
+import { Discord } from "lucide-react";
 
 const Register = () => {
   return (
     <div className="min-h-screen w-full bg-[#f8fafc] flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md mb-8 flex flex-col items-center">
         <div className="mb-4">
-          <div className="h-16 w-16 bg-blue-600 rounded-md flex items-center justify-center overflow-hidden">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" fill="#2563EB" />
-              <path d="M30 30H50C61 30 70 39 70 50C70 61 61 70 50 70H30V30Z" fill="white"/>
-              <path d="M50 50H70V70H50V50Z" fill="white"/>
-            </svg>
+          <div className="h-16 w-16 bg-[#5865F2] rounded-md flex items-center justify-center">
+            <Discord size={40} color="white" strokeWidth={1.5} />
           </div>
         </div>
         <h1 className="text-3xl font-bold text-blue-600 text-center">BUSINESS BUDDY</h1>
@@ -33,7 +29,6 @@ const Register = () => {
         </Link>
       </div>
       
-      {/* Add the virtual assistant component */}
       <VirtualAssistant />
     </div>
   );

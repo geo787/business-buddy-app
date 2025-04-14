@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Discord } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
@@ -41,31 +41,6 @@ const Index = () => {
 
   const sendEmailToUser = async (userEmail: string, userName: string) => {
     try {
-      // Here we would normally connect to an email service API
-      // This is a placeholder for actual API integration
-      // Example of how it would look with a real service:
-      /*
-      const response = await fetch('https://api.emailservice.com/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_API_KEY'
-        },
-        body: JSON.stringify({
-          to: userEmail,
-          subject: 'Your Business Buddy Demo',
-          html: `<p>Hello ${userName},</p>
-                <p>Thank you for your interest in Business Buddy!</p>
-                <p>You can access your demo at: <a href="https://demo.businessbuddy.com/access?token=DEMO_TOKEN">https://demo.businessbuddy.com/access</a></p>
-                <p>The demo will be active for 14 days.</p>
-                <p>If you have any questions, please reply to this email.</p>
-                <p>Best regards,<br>The Business Buddy Team</p>`
-        })
-      });
-      return response.ok;
-      */
-      
-      // For now, simulate a successful email sending
       await new Promise(resolve => setTimeout(resolve, 1500));
       return true;
     } catch (error) {
@@ -77,7 +52,6 @@ const Index = () => {
   const handleSendDemo = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate email
     if (!email.trim()) {
       setEmailError("Email is required");
       return;
@@ -91,14 +65,12 @@ const Index = () => {
     setEmailError("");
     setIsSubmitting(true);
     
-    // Send actual email
     const success = await sendEmailToUser(email, name);
     
     setIsSubmitting(false);
     setShowDemoModal(false);
     
     if (success) {
-      // Store user information for later follow-up
       const demoRequest = {
         email,
         name,
@@ -107,8 +79,6 @@ const Index = () => {
         requestedAt: new Date().toISOString()
       };
       
-      // In a real implementation, we would save this to a database
-      // For now, log it to console and store in localStorage
       console.log("Demo request:", demoRequest);
       
       const existingRequests = JSON.parse(localStorage.getItem('demoRequests') || '[]');
@@ -131,15 +101,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] overflow-x-hidden">
-      {/* Header with logo and login/register buttons */}
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <div className="h-12 w-12 bg-blue-600 rounded-md flex items-center justify-center overflow-hidden">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" fill="#2563EB" />
-              <path d="M30 30H50C61 30 70 39 70 50C70 61 61 70 50 70H30V30Z" fill="white"/>
-              <path d="M50 50H70V70H50V50Z" fill="white"/>
-            </svg>
+          <div className="h-12 w-12 bg-[#5865F2] rounded-md flex items-center justify-center">
+            <Discord size={32} color="white" strokeWidth={1.5} />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-xl text-blue-600">BUSINESS BUDDY</span>
@@ -156,15 +121,10 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Main hero section */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 text-center pt-16 pb-24">
         <div className="mb-6">
-          <div className="h-24 w-24 bg-blue-600 rounded-md flex items-center justify-center overflow-hidden mx-auto">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" fill="#2563EB" />
-              <path d="M30 30H50C61 30 70 39 70 50C70 61 61 70 50 70H30V30Z" fill="white"/>
-              <path d="M50 50H70V70H50V50Z" fill="white"/>
-            </svg>
+          <div className="h-24 w-24 bg-[#5865F2] rounded-md flex items-center justify-center">
+            <Discord size={56} color="white" strokeWidth={1.5} />
           </div>
         </div>
         
@@ -196,7 +156,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Demo Request Modal */}
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
