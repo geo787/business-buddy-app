@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import RegisterForm from "@/components/auth/RegisterForm";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
-import { Discord } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 const Register = () => {
   return (
@@ -10,7 +10,7 @@ const Register = () => {
       <div className="w-full max-w-md mb-8 flex flex-col items-center">
         <div className="mb-4">
           <div className="h-16 w-16 bg-[#5865F2] rounded-md flex items-center justify-center">
-            <Discord size={40} color="white" strokeWidth={1.5} />
+            <MessageSquare size={40} color="white" strokeWidth={1.5} />
           </div>
         </div>
         <h1 className="text-3xl font-bold text-blue-600 text-center">BUSINESS BUDDY</h1>
