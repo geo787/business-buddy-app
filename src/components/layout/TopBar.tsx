@@ -1,6 +1,6 @@
-
 import { useState, useEffect } from "react";
-import { Bell, Search, Sun, Moon, Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Bell, Search, Sun, Moon, Menu, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +18,25 @@ const TopBar = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const { collapsed, setCollapsed } = useSidebar();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToSettings = () => {
+    navigate('/settings');
+  };
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
@@ -60,6 +79,16 @@ const TopBar = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button 
+            onClick={goToSettings} 
+            variant="ghost" 
+            size="icon" 
+            className="hover:bg-muted" 
+            aria-label="Go to Settings"
+          >
+            <Moon size={18} />
+          </Button>
+
           <Button onClick={toggleTheme} variant="ghost" size="icon" className="hover:bg-muted" aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}>
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </Button>
@@ -68,6 +97,18 @@ const TopBar = () => {
             <Bell size={18} />
             <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
           </Button>
+
+          {showScrollTop && (
+            <Button 
+              onClick={scrollToTop} 
+              variant="ghost" 
+              size="icon" 
+              className="hover:bg-muted" 
+              aria-label="Scroll to top"
+            >
+              <ArrowUp size={18} />
+            </Button>
+          )}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
