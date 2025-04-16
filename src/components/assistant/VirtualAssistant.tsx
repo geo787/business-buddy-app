@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, XCircle, SendHorizontal, Plus } from "lucide-react";
+import { Bot, XCircle, SendHorizontal, Plus, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Message } from "@/models/Message";
 import { Intent, getStoredIntents, getStoredAnalytics, saveAnalytics } from "@/models/Intent";
@@ -16,8 +16,6 @@ const VirtualAssistant = () => {
   const [intents] = useState<Intent[]>(getStoredIntents());
   const [sessionActive, setSessionActive] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
-  const chatWindowRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   // Initialize with welcome message
@@ -26,7 +24,7 @@ const VirtualAssistant = () => {
       setMessages([
         {
           id: '1',
-          content: 'Bună ziua! Sunt asistentul virtual Business Buddy. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
+          content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
           sender: 'assistant',
           timestamp: new Date(),
         }
@@ -42,11 +40,6 @@ const VirtualAssistant = () => {
       analytics.lastSessionDate = new Date();
       saveAnalytics(analytics);
       setSessionActive(true);
-    }
-    
-    // Focus the input when opening
-    if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen, sessionActive]);
 
@@ -65,7 +58,7 @@ const VirtualAssistant = () => {
     setIsTyping(true);
     setInputMessage("");
     
-    // Simulate AI thinking and typing with slightly longer timeout for more complex processing
+    // Simulate AI thinking and typing
     setTimeout(() => {
       const { response, matchedIntent } = getAdvancedAIResponse(inputMessage, intents);
       
@@ -101,18 +94,11 @@ const VirtualAssistant = () => {
     setMessages([
       {
         id: Date.now().toString(),
-        content: 'Bună ziua! Sunt asistentul virtual Business Buddy. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
+        content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
         sender: 'assistant',
         timestamp: new Date(),
       }
     ]);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
   };
 
   return (
@@ -128,89 +114,14 @@ const VirtualAssistant = () => {
       {/* Chat window */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 w-96 flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden">
-          <div className="bg-primary text-white p-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Bot size={20} />
-              <h3 className="font-medium">Business Buddy Assistant</h3>
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 text-white hover:bg-primary-foreground/20" 
-                onClick={startNewChat}
-                title="Conversație nouă"
-              >
-                <Plus size={18} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 text-white hover:bg-primary-foreground/20" 
-                onClick={() => setIsOpen(false)}
-              >
-                <XCircle size={18} />
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[400px]" ref={chatWindowRef}>
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  message.sender === 'user' ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.sender === 'user'
-                      ? 'bg-primary text-white rounded-tr-none'
-                      : 'bg-gray-100 dark:bg-gray-800 rounded-tl-none'
-                  }`}
-                >
-                  {message.content}
-                </div>
-              </div>
-            ))}
-            
-            {isTyping && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '600ms' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          <div className="p-3 border-t">
-            <QuickReplies onSelectReply={handleQuickReply} />
-            
-            <div className="flex gap-2 mt-2">
-              <div className="relative flex-1">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Scrieți un mesaj..."
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                />
-              </div>
-              <Button 
-                onClick={handleSendMessage} 
-                className="px-3"
-                disabled={!inputMessage.trim()}
-              >
-                <SendHorizontal size={18} />
-              </Button>
-            </div>
-          </div>
+          <ChatWindow 
+            messages={messages} 
+            isTyping={isTyping} 
+            onSendMessage={handleSendMessage}
+            onNewChat={startNewChat}
+            inputValue={inputMessage}
+            onInputChange={setInputMessage}
+          />
         </div>
       )}
     </>
