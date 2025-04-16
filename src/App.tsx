@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Customers from "./pages/Customers";
@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Automation from "./pages/Automation";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
+import { App as CapacitorApp } from '@capacitor/app';
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,25 @@ const App = () => {
         localStorage.setItem('theme', 'light');
       }
     }
+  }, []);
+
+  // Set up back button handling for mobile
+  useEffect(() => {
+    if ('Capacitor' in window) {
+      CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+        if (!canGoBack) {
+          CapacitorApp.exitApp();
+        } else {
+          window.history.back();
+        }
+      });
+    }
+    
+    return () => {
+      if ('Capacitor' in window) {
+        CapacitorApp.removeAllListeners();
+      }
+    };
   }, []);
 
   return (

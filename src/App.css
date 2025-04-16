@@ -1,13 +1,15 @@
+
 #root {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
+/* Mobile-first approach */
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 4em;
+  padding: 1em;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -34,9 +36,45 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 1em;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+  
+  .logo {
+    height: 6em;
+    padding: 1.5em;
+  }
+  
+  .card {
+    padding: 2em;
+  }
+}
+
+/* Mobile viewport adjustments */
+@media (max-width: 480px) {
+  #root {
+    padding: 0.5rem;
+  }
+}
+
+/* Touch optimized styles */
+button, 
+.button,
+[role="button"],
+a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+input {
+  font-size: 16px; /* Prevents iOS zoom on focus */
 }

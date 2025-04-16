@@ -1,13 +1,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, XCircle, SendHorizontal, Plus, Sparkles } from "lucide-react";
+import { Bot, XCircle, Plus, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Message } from "@/models/Message";
 import { Intent, getStoredIntents, getStoredAnalytics, saveAnalytics } from "@/models/Intent";
 import { getAdvancedAIResponse } from "@/utils/nlpUtils";
 import ChatWindow from "./ChatWindow";
 import QuickReplies from "./QuickReplies";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const VirtualAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,9 @@ const VirtualAssistant = () => {
   const [intents] = useState<Intent[]>(getStoredIntents());
   const [sessionActive, setSessionActive] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
+  const [showQuickReplies, setShowQuickReplies] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Initialize with welcome message
   useEffect(() => {
@@ -43,6 +46,16 @@ const VirtualAssistant = () => {
     }
   }, [isOpen, sessionActive]);
 
+  // Listen for toggle-assistant event
+  useEffect(() => {
+    const handleToggleAssistant = () => {
+      setIsOpen(prev => !prev);
+    };
+    
+    window.addEventListener('toggle-assistant', handleToggleAssistant);
+    return () => window.removeEventListener('toggle-assistant', handleToggleAssistant);
+  }, []);
+
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
     
@@ -57,6 +70,7 @@ const VirtualAssistant = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
     setInputMessage("");
+    setShowQuickReplies(false);
     
     // Simulate AI thinking and typing
     setTimeout(() => {
@@ -99,6 +113,11 @@ const VirtualAssistant = () => {
         timestamp: new Date(),
       }
     ]);
+    setShowQuickReplies(false);
+  };
+
+  const toggleQuickReplies = () => {
+    setShowQuickReplies(!showQuickReplies);
   };
 
   return (
@@ -113,7 +132,7 @@ const VirtualAssistant = () => {
 
       {/* Chat window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-96 flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden">
+        <div className={`fixed ${isMobile ? 'bottom-[88px] left-3 right-3' : 'bottom-24 right-6 w-96'} flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden`}>
           <ChatWindow 
             messages={messages} 
             isTyping={isTyping} 
@@ -122,6 +141,23 @@ const VirtualAssistant = () => {
             inputValue={inputMessage}
             onInputChange={setInputMessage}
           />
+          
+          {/* Quick replies toggle button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 left-2 h-8 w-8 p-0 rounded-full"
+            onClick={toggleQuickReplies}
+          >
+            {showQuickReplies ? <XCircle size={16} /> : <Plus size={16} />}
+          </Button>
+        </div>
+      )}
+
+      {/* Quick replies - show when enabled */}
+      {isOpen && showQuickReplies && (
+        <div className={`fixed ${isMobile ? 'bottom-[88px] left-3' : 'bottom-24 left-6'} z-50`}>
+          <QuickReplies onSelectReply={handleQuickReply} />
         </div>
       )}
     </>
