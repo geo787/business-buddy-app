@@ -17,9 +17,11 @@ import Automation from "./pages/Automation";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 import { App as CapacitorApp } from '@capacitor/app';
 
+// Create QueryClient outside of component
 const queryClient = new QueryClient();
 
-const App = () => {
+// Create AppContent component to use hooks inside component context
+const AppContent = () => {
   // Initialize dark mode based on system preference or saved preference
   useEffect(() => {
     // Check localStorage first
@@ -61,25 +63,32 @@ const App = () => {
   }, []);
 
   return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/customers" element={<Customers />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/automation" element={<Automation />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <VirtualAssistant />
+    </BrowserRouter>
+  );
+};
+
+// Main App component without hooks
+const App = () => {
+  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/automation" element={<Automation />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <VirtualAssistant />
-        </BrowserRouter>
+        <AppContent />
       </TooltipProvider>
     </QueryClientProvider>
   );
