@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { StrictMode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +16,7 @@ import Register from "./pages/Register";
 import Automation from "./pages/Automation";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 import { App as CapacitorApp } from '@capacitor/app';
+import { useEffect } from "react";
 
 // Create QueryClient outside of component
 const queryClient = new QueryClient();
@@ -63,7 +64,7 @@ const AppContent = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
@@ -77,20 +78,24 @@ const AppContent = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <VirtualAssistant />
-    </BrowserRouter>
+    </>
   );
 };
 
 // Main App component without hooks
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <AppContent />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <AppContent />
+          </TooltipProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </StrictMode>
   );
 };
 
