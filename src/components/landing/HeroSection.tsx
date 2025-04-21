@@ -16,7 +16,7 @@ const HeroSection = () => {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Customer <span className="text-primary">Retention</span> Platform
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0">
+            <p className="text-base sm:text-lg md:text-xl text-black/80 dark:text-white/80 max-w-xl mx-auto lg:mx-0">
               Transform your business with our powerful analytics. Track, analyze and improve your customer metrics in real-time.
             </p>
             <div className="flex flex-wrap gap-4 mt-4 justify-center lg:justify-start">
