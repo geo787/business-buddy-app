@@ -1,10 +1,11 @@
-
 import { StrictMode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { App as CapacitorApp } from '@capacitor/app';
+import { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Customers from "./pages/Customers";
@@ -15,8 +16,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Automation from "./pages/Automation";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
-import { App as CapacitorApp } from '@capacitor/app';
-import { useEffect } from "react";
 
 // Create QueryClient outside of component
 const queryClient = new QueryClient();
