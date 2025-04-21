@@ -1,8 +1,9 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, CheckCircle, BarChart2, Users } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -39,38 +40,25 @@ const Index = () => {
     setMessage("");
   };
 
-  const sendEmailToUser = async (userEmail: string, userName: string) => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      return true;
-    } catch (error) {
-      console.error("Error sending email:", error);
-      return false;
-    }
-  };
-
   const handleSendDemo = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email.trim()) {
-      setEmailError("Email is required");
+      setEmailError("Email este obligatoriu");
       return;
     }
     
     if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address");
+      setEmailError("Vă rugăm introduceți o adresă de email validă");
       return;
     }
     
     setEmailError("");
     setIsSubmitting(true);
     
-    const success = await sendEmailToUser(email, name);
-    
-    setIsSubmitting(false);
-    setShowDemoModal(false);
-    
-    if (success) {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       const demoRequest = {
         email,
         name,
@@ -79,95 +67,124 @@ const Index = () => {
         requestedAt: new Date().toISOString()
       };
       
-      console.log("Demo request:", demoRequest);
+      console.log("Cerere demo:", demoRequest);
       
       const existingRequests = JSON.parse(localStorage.getItem('demoRequests') || '[]');
       localStorage.setItem('demoRequests', JSON.stringify([...existingRequests, demoRequest]));
       
       toast({
-        title: "Demo Link Sent",
-        description: `A demo link has been sent to ${email}. Please check your inbox.`,
+        title: "Link Demo Trimis",
+        description: `Un link pentru demo a fost trimis la ${email}. Verificați-vă email-ul.`,
         duration: 5000,
       });
-    } else {
+      
+      setShowDemoModal(false);
+    } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to send demo link. Please try again later.",
+        title: "Eroare",
+        description: "Nu s-a putut trimite link-ul demo. Vă rugăm încercați din nou.",
         variant: "destructive",
         duration: 5000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f8fafc] overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="h-12 w-12 bg-[#5865F2] rounded-md flex items-center justify-center">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
             <MessageSquare size={32} color="white" strokeWidth={1.5} />
           </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xl text-blue-600">BUSINESS BUDDY</span>
-            <span className="text-xs text-gray-500 uppercase tracking-wider -mt-1">Customer Retention Platform</span>
+          <div>
+            <h1 className="text-2xl font-bold text-blue-800">Business Buddy</h1>
+            <p className="text-sm text-blue-600">Platformă de Retenție Clienți</p>
           </div>
         </div>
+        
         <div className="flex space-x-4">
           <Link to="/login">
-            <Button variant="outline" className="bg-white hover:bg-gray-50 border-gray-200">Login</Button>
+            <Button variant="outline" className="text-blue-700 hover:bg-blue-50 border-blue-200">
+              Conectare
+            </Button>
           </Link>
           <Link to="/register">
-            <Button className="bg-blue-600 hover:bg-blue-700">Register</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              Înregistrare
+            </Button>
           </Link>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 text-center pt-16 pb-24">
-        <div className="mb-6">
-          <div className="h-24 w-24 bg-[#5865F2] rounded-md flex items-center justify-center">
-            <MessageSquare size={56} color="white" strokeWidth={1.5} />
+      <div className="flex-1 flex items-center justify-center px-4 text-center">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8 space-y-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-blue-900">
+              Transformă Retenția Clienților
+            </h2>
+            <p className="text-lg text-blue-700 max-w-2xl mx-auto">
+              Monitorizează, analizează și îmbunătățește experiența clienților tăi cu instrumente puternice de insight și automatizare.
+            </p>
           </div>
-        </div>
-        
-        <h1 className="text-5xl font-bold mb-2 text-gray-900">Customer</h1>
-        <h1 className="text-5xl font-bold mb-8 text-gray-900">Retention Platform</h1>
-        
-        <p className="max-w-xl text-gray-600 mb-12 text-lg">
-          Transform your business with our powerful analytics. Track, analyze 
-          and improve your customer metrics in real-time.
-        </p>
-        
-        <div className="flex flex-col gap-4 items-center">
-          <Link to="/register">
-            <Button className="px-8 py-6 text-lg flex items-center gap-2 bg-blue-600 hover:bg-blue-700 rounded-full shadow-md">
-              Start Now 
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-all">
+              <div className="mb-4 flex justify-center">
+                <BarChart2 size={48} className="text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-blue-900">Analize Detaliate</h3>
+              <p className="text-blue-700">Urmărește în timp real performanța și satisfacția clienților.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-all">
+              <div className="mb-4 flex justify-center">
+                <Users size={48} className="text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-blue-900">Segmentare Clienți</h3>
+              <p className="text-blue-700">Identifică și deservește fiecare segment de clienți.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-all">
+              <div className="mb-4 flex justify-center">
+                <CheckCircle size={48} className="text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-blue-900">Retenție Clienți</h3>
+              <p className="text-blue-700">Crește loialitatea și reduce abandonul.</p>
+            </div>
+          </div>
+
+          <div className="flex justify-center space-x-4">
+            <Link to="/register">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8">
+                Începe Acum
+              </Button>
+            </Link>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="text-blue-700 hover:bg-blue-50 border-blue-200"
+              onClick={handleViewDemo}
+            >
+              Vizualizare Demo
             </Button>
-          </Link>
-          
-          <Button 
-            variant="ghost" 
-            className="text-gray-600 hover:text-gray-800"
-            onClick={handleViewDemo}
-          >
-            View Demo
-          </Button>
+          </div>
         </div>
       </div>
 
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Request Demo Access</DialogTitle>
+            <DialogTitle>Solicită Acces Demo</DialogTitle>
             <DialogDescription>
-              Enter your details to receive a link to our interactive demo and explore how Business Buddy can help your business.
+              Introdu detaliile pentru a primi un link către demonstrația interactivă Business Buddy.
             </DialogDescription>
           </DialogHeader>
           
           <form onSubmit={handleSendDemo} className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-right">
+              <Label htmlFor="email">
                 Email <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -175,7 +192,7 @@ const Index = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                placeholder="email@exemplu.ro"
                 className={emailError ? "border-red-500" : ""}
                 required
               />
@@ -185,40 +202,34 @@ const Index = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="name">
-                Your Name
-              </Label>
+              <Label htmlFor="name">Numele Dumneavoastră</Label>
               <Input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
+                placeholder="Ion Popescu"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="businessType">
-                Business Type
-              </Label>
+              <Label htmlFor="businessType">Tipul Afacerii</Label>
               <Input
                 id="businessType"
                 type="text"
                 value={businessType}
                 onChange={(e) => setBusinessType(e.target.value)}
-                placeholder="E-commerce, SaaS, Retail, etc."
+                placeholder="E-commerce, SaaS, Retail etc."
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="message">
-                Additional Notes
-              </Label>
+              <Label htmlFor="message">Observații Suplimentare</Label>
               <Textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Let us know your specific business needs..."
+                placeholder="Spuneți-ne despre nevoile specifice ale afacerii dumneavoastră..."
                 rows={3}
               />
             </div>
@@ -227,9 +238,9 @@ const Index = () => {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isSubmitting ? "Sending..." : "Send Demo Link"}
+                {isSubmitting ? "Se trimite..." : "Trimite Link Demo"}
               </Button>
             </DialogFooter>
           </form>
