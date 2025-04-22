@@ -14,6 +14,8 @@ interface ChatWindowProps {
   onNewChat: () => void;
   inputValue: string;
   onInputChange: (value: string) => void;
+  followUpQuestions?: string[];
+  onFollowUpClick?: (question: string) => void;
 }
 
 const ChatWindow = ({ 
@@ -22,7 +24,9 @@ const ChatWindow = ({
   onSendMessage, 
   onNewChat, 
   inputValue, 
-  onInputChange 
+  onInputChange,
+  followUpQuestions = [],
+  onFollowUpClick
 }: ChatWindowProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +60,23 @@ const ChatWindow = ({
       <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
         <MessageList messages={messages} isTyping={isTyping} ref={messagesEndRef} />
       </CardContent>
+      
+      {/* Follow-up suggestions */}
+      {followUpQuestions && followUpQuestions.length > 0 && !isTyping && (
+        <div className="px-4 pb-2">
+          <div className="flex flex-wrap gap-2">
+            {followUpQuestions.map((question, index) => (
+              <button
+                key={index}
+                className="bg-primary/10 hover:bg-primary/20 text-primary text-sm py-1 px-3 rounded-full transition-colors"
+                onClick={() => onFollowUpClick && onFollowUpClick(question)}
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       
       <CardFooter className="p-4 pt-2 border-t">
         <ChatInput 

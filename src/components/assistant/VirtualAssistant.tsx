@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot, XCircle, Plus, Sparkles } from "lucide-react";
@@ -6,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Message } from "@/models/Message";
 import { Intent, getStoredIntents, getStoredAnalytics, saveAnalytics } from "@/models/Intent";
 import { getAdvancedAIResponse } from "@/utils/nlpUtils";
+import { getConversationContext, generateFollowUpQuestions } from "@/utils/chatUtils";
 import ChatWindow from "./ChatWindow";
 import QuickReplies from "./QuickReplies";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -18,24 +18,30 @@ const VirtualAssistant = () => {
   const [sessionActive, setSessionActive] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [showQuickReplies, setShowQuickReplies] = useState(false);
+  const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([]);
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  
+  const conversationContextRef = useRef<string[]>([]);
 
-  // Initialize with welcome message
   useEffect(() => {
     if (messages.length === 0) {
-      setMessages([
-        {
-          id: '1',
-          content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
-          sender: 'assistant',
-          timestamp: new Date(),
-        }
+      const welcomeMessage = {
+        id: '1',
+        content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
+        sender: 'assistant',
+        timestamp: new Date(),
+      };
+      setMessages([welcomeMessage]);
+      
+      setFollowUpQuestions([
+        "Vreau să verific statusul financiar",
+        "Cum optimizez fluxul de numerar?",
+        "Am nevoie de ajutor cu logistica"
       ]);
     }
   }, [messages.length]);
 
-  // Start a new session when the chat is opened
   useEffect(() => {
     if (isOpen && !sessionActive) {
       const analytics = getStoredAnalytics();
@@ -46,7 +52,6 @@ const VirtualAssistant = () => {
     }
   }, [isOpen, sessionActive]);
 
-  // Listen for toggle-assistant event
   useEffect(() => {
     const handleToggleAssistant = () => {
       setIsOpen(prev => !prev);
@@ -56,10 +61,17 @@ const VirtualAssistant = () => {
     return () => window.removeEventListener('toggle-assistant', handleToggleAssistant);
   }, []);
 
+  useEffect(() => {
+    if (messages.length > 0) {
+      conversationContextRef.current = getConversationContext(
+        messages.map(m => ({ content: m.content, sender: m.sender as 'user' | 'assistant' }))
+      );
+    }
+  }, [messages]);
+
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
     
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputMessage,
@@ -72,9 +84,19 @@ const VirtualAssistant = () => {
     setInputMessage("");
     setShowQuickReplies(false);
     
-    // Simulate AI thinking and typing
+    const conversationContext = conversationContextRef.current;
+    
+    const wordCount = inputMessage.split(/\s+/).length;
+    const baseDelay = 800;
+    const wordsPerSecondFactor = 100;
+    const thinkingDelay = Math.min(baseDelay + wordCount * wordsPerSecondFactor, 3000);
+    
     setTimeout(() => {
-      const { response, matchedIntent } = getAdvancedAIResponse(inputMessage, intents);
+      const { response, matchedIntent } = getAdvancedAIResponse(
+        inputMessage, 
+        intents, 
+        conversationContext
+      );
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -86,7 +108,9 @@ const VirtualAssistant = () => {
       setMessages(prev => [...prev, assistantMessage]);
       setIsTyping(false);
       
-      // Show toast notification when matched to an intent
+      const newFollowUps = generateFollowUpQuestions(response, matchedIntent);
+      setFollowUpQuestions(newFollowUps);
+      
       if (matchedIntent) {
         toast({
           title: "Intent identificat",
@@ -94,7 +118,7 @@ const VirtualAssistant = () => {
           duration: 3000,
         });
       }
-    }, 1200);
+    }, thinkingDelay);
   };
 
   const handleQuickReply = (message: string) => {
@@ -114,6 +138,18 @@ const VirtualAssistant = () => {
       }
     ]);
     setShowQuickReplies(false);
+    conversationContextRef.current = [];
+    
+    setFollowUpQuestions([
+      "Vreau să verific statusul financiar",
+      "Cum optimizez fluxul de numerar?",
+      "Am nevoie de ajutor cu logistica"
+    ]);
+    
+    const analytics = getStoredAnalytics();
+    analytics.sessionsCount = (analytics.sessionsCount || 0) + 1;
+    analytics.lastSessionDate = new Date();
+    saveAnalytics(analytics);
   };
 
   const toggleQuickReplies = () => {
@@ -122,7 +158,6 @@ const VirtualAssistant = () => {
 
   return (
     <>
-      {/* Chat button - fixed on the bottom right */}
       <Button
         className="fixed bottom-6 right-6 rounded-full p-4 h-14 w-14 flex items-center justify-center shadow-lg z-50 bg-gradient-to-r from-primary to-primary/80"
         onClick={() => setIsOpen(!isOpen)}
@@ -130,7 +165,6 @@ const VirtualAssistant = () => {
         {isOpen ? <XCircle size={24} /> : <Bot size={24} />}
       </Button>
 
-      {/* Chat window */}
       {isOpen && (
         <div className={`fixed ${isMobile ? 'bottom-[88px] left-3 right-3' : 'bottom-24 right-6 w-96'} flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden`}>
           <ChatWindow 
@@ -140,9 +174,10 @@ const VirtualAssistant = () => {
             onNewChat={startNewChat}
             inputValue={inputMessage}
             onInputChange={setInputMessage}
+            followUpQuestions={followUpQuestions}
+            onFollowUpClick={handleQuickReply}
           />
           
-          {/* Quick replies toggle button */}
           <Button
             variant="ghost"
             size="sm"
@@ -154,7 +189,6 @@ const VirtualAssistant = () => {
         </div>
       )}
 
-      {/* Quick replies - show when enabled */}
       {isOpen && showQuickReplies && (
         <div className={`fixed ${isMobile ? 'bottom-[88px] left-3' : 'bottom-24 left-6'} z-50`}>
           <QuickReplies onSelectReply={handleQuickReply} />
