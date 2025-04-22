@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, XCircle, Plus, Sparkles } from "lucide-react";
+import { Bot, XCircle, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Message } from "@/models/Message";
 import { Intent, getStoredIntents, getStoredAnalytics, saveAnalytics } from "@/models/Intent";
@@ -26,7 +26,7 @@ const VirtualAssistant = () => {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const welcomeMessage = {
+      const welcomeMessage: Message = {
         id: '1',
         content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
         sender: 'assistant',
