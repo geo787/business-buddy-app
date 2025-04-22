@@ -4,7 +4,7 @@ const Footer = () => {
     <footer className="py-8 px-4 bg-secondary/30">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-black font-medium">
             © {new Date().getFullYear()} Customer Retention Platform. All rights reserved.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2 md:gap-3">
