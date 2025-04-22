@@ -1,14 +1,15 @@
 
 import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MessageSquareText, ChartBar, Network } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Intent, getStoredIntents } from "@/models/Intent";
 import IntentList from "./IntentList";
 import AIConnector from "./AIConnector";
 import IntentForm from "./IntentForm";
 import ChatbotPreview from "./ChatbotPreview";
-import ChatAnalytics from "./ChatAnalytics";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChartBar, MessageSquareText, Network } from "lucide-react";
+import IntentAnalytics from "./chatbot/IntentAnalytics";
+import NLPConfiguration from "./chatbot/NLPConfiguration";
 
 const ChatbotConfiguration = () => {
   const { toast } = useToast();
@@ -88,6 +89,20 @@ const ChatbotConfiguration = () => {
     });
   };
 
+  // Prepare data for analytics
+  const intentUsageData = intents.map(intent => ({
+    name: intent.name,
+    value: intent.usageCount || 0
+  }));
+
+  const categoryData = Object.entries(
+    intents.reduce((acc, intent) => {
+      const category = intent.category === "banking" ? "Banking" : "Logistică";
+      acc[category] = (acc[category] || 0) + (intent.usageCount || 0);
+      return acc;
+    }, {} as Record<string, number>)
+  ).map(([name, value]) => ({ name, value }));
+
   return (
     <Tabs defaultValue="intents" className="w-full space-y-6">
       <TabsList className="w-full grid grid-cols-3 mb-4">
@@ -129,75 +144,14 @@ const ChatbotConfiguration = () => {
       </TabsContent>
       
       <TabsContent value="analytics">
-        <ChatAnalytics />
+        <IntentAnalytics 
+          intentUsageData={intentUsageData}
+          categoryData={categoryData}
+        />
       </TabsContent>
       
       <TabsContent value="nlp">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <IntentList 
-              intents={intents} 
-              onEdit={handleEditIntent} 
-              onDelete={handleDeleteIntent} 
-              onAddNew={handleAddNewIntent} 
-            />
-          </div>
-          
-          <div className="lg:col-span-2">
-            <div className="space-y-6">
-              <div className="bg-card rounded-lg border p-6">
-                <h2 className="text-xl font-semibold mb-4">Entity Extraction</h2>
-                <p className="text-muted-foreground mb-4">
-                  Chatbot-ul poate extrage automat următoarele entități din mesajele utilizatorilor:
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <span className="bg-primary/10 text-primary px-2 py-1 rounded mr-2">Order Numbers</span>
-                    <span className="text-sm">Exemplu: #123456</span>
-                  </li>
-                  <li className="flex items-center">
-                    <span className="bg-primary/10 text-primary px-2 py-1 rounded mr-2">Dates</span>
-                    <span className="text-sm">Exemplu: 15/03/2023</span>
-                  </li>
-                  <li className="flex items-center">
-                    <span className="bg-primary/10 text-primary px-2 py-1 rounded mr-2">Currency Values</span>
-                    <span className="text-sm">Exemplu: 1500 RON</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-card rounded-lg border p-6">
-                <h2 className="text-xl font-semibold mb-4">Intent Matching</h2>
-                <p className="text-muted-foreground mb-4">
-                  Sistemul utilizează o abordare avansată de potrivire a intent-urilor bazată pe:
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start">
-                    <div className="bg-primary/10 text-primary h-6 w-6 rounded-full flex items-center justify-center mr-2 mt-0.5">1</div>
-                    <div>
-                      <span className="font-medium">Tokenizare</span>
-                      <p className="text-sm text-muted-foreground">Împărțirea textului în cuvinte și prelucrarea pentru a elimina semnele de punctuație.</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-primary/10 text-primary h-6 w-6 rounded-full flex items-center justify-center mr-2 mt-0.5">2</div>
-                    <div>
-                      <span className="font-medium">Vectorizare</span>
-                      <p className="text-sm text-muted-foreground">Transformarea textului în vectori pentru comparație matematică.</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-primary/10 text-primary h-6 w-6 rounded-full flex items-center justify-center mr-2 mt-0.5">3</div>
-                    <div>
-                      <span className="font-medium">Similaritate Cosinus</span>
-                      <p className="text-sm text-muted-foreground">Calcularea similarității dintre mesajul utilizatorului și frazele de antrenament.</p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+        <NLPConfiguration />
       </TabsContent>
     </Tabs>
   );
