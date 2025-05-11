@@ -3,6 +3,7 @@ import { useAssistant } from "@/hooks/use-assistant";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AssistantButton from "./AssistantButton";
 import AssistantChat from "./AssistantChat";
+import { useEffect } from "react";
 
 const VirtualAssistant = () => {
   const isMobile = useIsMobile();
@@ -20,6 +21,18 @@ const VirtualAssistant = () => {
     toggleQuickReplies,
     toggleAssistant
   } = useAssistant();
+
+  // Auto-open the assistant when the page loads
+  useEffect(() => {
+    // Short delay to ensure the page has loaded fully
+    const timer = setTimeout(() => {
+      if (!isOpen) {
+        toggleAssistant();
+      }
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>

@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { XCircle, Plus } from "lucide-react";
+import { XCircle, Plus, Sparkles } from "lucide-react";
 import { Message } from "@/models/Message";
 import ChatWindow from "./ChatWindow";
 import QuickReplies from "./QuickReplies";
@@ -36,7 +36,23 @@ const AssistantChat = ({
 }: AssistantChatProps) => {
   return (
     <>
-      <div className={`fixed ${isMobile ? 'bottom-[88px] left-3 right-3' : 'bottom-24 right-6 w-96'} flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden`}>
+      <div className={`fixed ${isMobile ? 'bottom-[88px] left-3 right-3' : 'bottom-24 right-6 w-[450px]'} flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden max-h-[80vh]`}>
+        <div className="absolute top-2 left-2 right-2 flex justify-between items-center z-20">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 rounded-full bg-background/80 backdrop-blur-sm"
+            onClick={toggleQuickReplies}
+          >
+            {showQuickReplies ? <XCircle size={16} /> : <Plus size={16} />}
+          </Button>
+          
+          <div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full">
+            <Sparkles size={14} className="text-primary" />
+            <span className="text-xs font-medium text-primary">Business Buddy AI</span>
+          </div>
+        </div>
+        
         <ChatWindow 
           messages={messages} 
           isTyping={isTyping} 
@@ -47,15 +63,6 @@ const AssistantChat = ({
           followUpQuestions={followUpQuestions}
           onFollowUpClick={onFollowUpClick}
         />
-        
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute top-2 left-2 h-8 w-8 p-0 rounded-full"
-          onClick={toggleQuickReplies}
-        >
-          {showQuickReplies ? <XCircle size={16} /> : <Plus size={16} />}
-        </Button>
       </div>
 
       {showQuickReplies && (

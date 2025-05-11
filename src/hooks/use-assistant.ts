@@ -81,10 +81,17 @@ export const useAssistant = () => {
     
     const conversationContext = conversationContextRef.current;
     
+    // Calculate a realistic delay based on message length
     const wordCount = inputMessage.split(/\s+/).length;
     const baseDelay = 800;
     const wordsPerSecondFactor = 100;
-    const thinkingDelay = Math.min(baseDelay + wordCount * wordsPerSecondFactor, 3000);
+    // More intelligent, variable typing delay based on complexity
+    const hasComplexTerms = /profit|investiție|fiscal|contabilitate|logistică|optimizare/.test(inputMessage.toLowerCase());
+    const complexityMultiplier = hasComplexTerms ? 1.5 : 1;
+    const thinkingDelay = Math.min(
+      baseDelay + (wordCount * wordsPerSecondFactor * complexityMultiplier), 
+      4000
+    );
     
     setTimeout(() => {
       const { response, matchedIntent } = getAdvancedAIResponse(
@@ -103,14 +110,16 @@ export const useAssistant = () => {
       setMessages(prev => [...prev, assistantMessage]);
       setIsTyping(false);
       
+      // Generate more contextual follow-ups based on the conversation
       const newFollowUps = generateFollowUpQuestions(response, matchedIntent);
       setFollowUpQuestions(newFollowUps);
       
-      if (matchedIntent) {
+      // Only show toast for significant matches
+      if (matchedIntent && matchedIntent.category) {
         toast({
           title: "Intent identificat",
           description: `Asistentul a identificat intent-ul: ${matchedIntent.name}`,
-          duration: 3000,
+          duration: 2000,
         });
       }
     }, thinkingDelay);
