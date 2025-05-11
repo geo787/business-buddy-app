@@ -1,3 +1,4 @@
+
 import { StrictMode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -15,6 +16,7 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Automation from "./pages/Automation";
+import AppLayout from "./components/layout/AppLayout";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 
 // Create QueryClient outside of component
@@ -65,15 +67,21 @@ const AppContent = () => {
   return (
     <>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/automation" element={<Automation />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        
+        {/* App routes with shared layout */}
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/automation" element={<Automation />} />
+        </Route>
+        
+        {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <VirtualAssistant />

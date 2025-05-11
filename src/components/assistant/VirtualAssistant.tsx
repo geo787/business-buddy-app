@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot, XCircle, Plus } from "lucide-react";
@@ -9,6 +10,8 @@ import { getConversationContext, generateFollowUpQuestions } from "@/utils/chatU
 import ChatWindow from "./ChatWindow";
 import QuickReplies from "./QuickReplies";
 import { useIsMobile } from "@/hooks/use-mobile";
+import AssistantButton from "./AssistantButton";
+import AssistantChat from "./AssistantChat";
 
 const VirtualAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -158,41 +161,23 @@ const VirtualAssistant = () => {
 
   return (
     <>
-      <Button
-        className="fixed bottom-6 right-6 rounded-full p-4 h-14 w-14 flex items-center justify-center shadow-lg z-50 bg-gradient-to-r from-primary to-primary/80"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <XCircle size={24} /> : <Bot size={24} />}
-      </Button>
+      <AssistantButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
 
       {isOpen && (
-        <div className={`fixed ${isMobile ? 'bottom-[88px] left-3 right-3' : 'bottom-24 right-6 w-96'} flex flex-col rounded-lg shadow-xl z-50 bg-background border overflow-hidden`}>
-          <ChatWindow 
-            messages={messages} 
-            isTyping={isTyping} 
-            onSendMessage={handleSendMessage}
-            onNewChat={startNewChat}
-            inputValue={inputMessage}
-            onInputChange={setInputMessage}
-            followUpQuestions={followUpQuestions}
-            onFollowUpClick={handleQuickReply}
-          />
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute top-2 left-2 h-8 w-8 p-0 rounded-full"
-            onClick={toggleQuickReplies}
-          >
-            {showQuickReplies ? <XCircle size={16} /> : <Plus size={16} />}
-          </Button>
-        </div>
-      )}
-
-      {isOpen && showQuickReplies && (
-        <div className={`fixed ${isMobile ? 'bottom-[88px] left-3' : 'bottom-24 left-6'} z-50`}>
-          <QuickReplies onSelectReply={handleQuickReply} />
-        </div>
+        <AssistantChat
+          isMobile={isMobile}
+          messages={messages}
+          isTyping={isTyping}
+          inputMessage={inputMessage}
+          followUpQuestions={followUpQuestions}
+          onSendMessage={handleSendMessage}
+          onInputChange={setInputMessage}
+          onNewChat={startNewChat}
+          onFollowUpClick={handleQuickReply}
+          showQuickReplies={showQuickReplies}
+          toggleQuickReplies={toggleQuickReplies}
+          handleQuickReply={handleQuickReply}
+        />
       )}
     </>
   );
