@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import LoginHeader from "@/components/auth/LoginHeader";
 import LoginForm from "@/components/auth/LoginForm";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
-import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 
 const Login = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -24,9 +23,6 @@ const Login = () => {
           <p className="text-blue-600 font-semibold">BACK TO HOME</p>
         </Link>
       </div>
-      
-      {/* Add the virtual assistant component */}
-      <VirtualAssistant />
     </div>
   );
 };

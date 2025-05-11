@@ -32,7 +32,7 @@ const QuickReplies = ({ onSelectReply }: QuickRepliesProps) => {
   ];
 
   return (
-    <div className="fixed bottom-24 left-6 flex flex-col space-y-2 z-50">
+    <div className="flex flex-col space-y-2">
       {quickReplies.map((reply, index) => (
         <Card 
           key={index}

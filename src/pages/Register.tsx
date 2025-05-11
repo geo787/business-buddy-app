@@ -1,7 +1,6 @@
 
 import { Link } from "react-router-dom";
 import RegisterForm from "@/components/auth/RegisterForm";
-import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 import { MessageSquare } from "lucide-react";
 
 const Register = () => {
@@ -29,8 +28,6 @@ const Register = () => {
           </button>
         </Link>
       </div>
-      
-      <VirtualAssistant />
     </div>
   );
 };
