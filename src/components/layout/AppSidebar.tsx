@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   useSidebar
 } from "@/components/ui/sidebar";
-import { Home, Users, BarChart3, Settings, LifeBuoy, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, Users, BarChart3, Settings, LifeBuoy, ChevronLeft, ChevronRight, Truck, CreditCard } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -42,13 +42,23 @@ const AppSidebar = () => {
   const menuItems = [
     {
       title: "Dashboard",
-      path: "/",
+      path: "/dashboard",
       icon: Home
     },
     {
       title: "Customers",
       path: "/customers",
       icon: Users
+    },
+    {
+      title: "Logistics",
+      path: "/logistics",
+      icon: Truck
+    },
+    {
+      title: "Finance",
+      path: "/finance",
+      icon: CreditCard
     },
     {
       title: "Analytics",
@@ -70,9 +80,9 @@ const AppSidebar = () => {
           "opacity-100": !collapsed
         })}>
           <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold">CR</span>
+            <span className="text-primary-foreground font-bold">BB</span>
           </div>
-          <h1 className="font-bold text-lg tracking-tight">Retention</h1>
+          <h1 className="font-bold text-lg tracking-tight">Business Buddy</h1>
         </div>
         <Button
           variant="ghost"
@@ -111,9 +121,12 @@ const AppSidebar = () => {
       <SidebarFooter className="py-4">
         <div className="px-3">
           <SidebarMenuItem>
-            <SidebarMenuButton aria-label="Help and Support">
+            <SidebarMenuButton 
+              onClick={() => window.dispatchEvent(new Event('toggle-assistant'))}
+              aria-label="AI Assistant"
+            >
               <LifeBuoy size={18} />
-              <span>Help & Support</span>
+              <span>AI Assistant</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </div>

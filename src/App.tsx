@@ -18,6 +18,8 @@ import Register from "./pages/Register";
 import Automation from "./pages/Automation";
 import AppLayout from "./components/layout/AppLayout";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
+import Logistics from "./pages/Logistics";
+import Finance from "./pages/Finance";
 
 // Create QueryClient outside of component
 const queryClient = new QueryClient();
@@ -77,6 +79,8 @@ const AppContent = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/logistics" element={<Logistics />} />
+          <Route path="/finance" element={<Finance />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/automation" element={<Automation />} />
         </Route>
