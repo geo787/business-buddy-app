@@ -1,4 +1,6 @@
+
 import { useState, useEffect } from "react";
+import { MessageSquare } from "lucide-react";
 import { NavbarBrand } from "./navbar/NavbarBrand";
 import { NavbarDesktopNav } from "./navbar/NavbarDesktopNav";
 import { NavbarAuthButtons } from "./navbar/NavbarAuthButtons";
