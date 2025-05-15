@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -18,17 +19,37 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        accent: "bg-blue-600 text-white hover:bg-blue-700",
+        success: "bg-green-600 text-white hover:bg-green-700",
+        warning: "bg-amber-500 text-white hover:bg-amber-600",
+        info: "bg-sky-500 text-white hover:bg-sky-600",
+        subtle: "bg-muted/50 hover:bg-muted",
+        tab: "bg-transparent text-muted-foreground hover:bg-muted/50 data-[state=active]:bg-background data-[state=active]:text-foreground",
+        browser: "text-xs py-1 px-2 h-auto text-gray-700 bg-gray-100 hover:bg-gray-200",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
+        xl: "h-12 rounded-md px-10 text-base",
         icon: "h-10 w-10",
+        "icon-sm": "h-8 w-8",
+        "icon-xs": "h-6 w-6",
+        auto: "h-auto",
+      },
+      rounded: {
+        default: "rounded-md",
+        full: "rounded-full",
+        none: "rounded-none",
+        sm: "rounded-sm",
+        lg: "rounded-lg",
+        xl: "rounded-xl",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      rounded: "default",
     },
   }
 )
@@ -40,11 +61,11 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, rounded, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, rounded, className }))}
         ref={ref}
         {...props}
       />

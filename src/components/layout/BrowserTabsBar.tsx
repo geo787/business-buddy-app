@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface BrowserTab {
   id: string;
@@ -59,24 +60,28 @@ const BrowserTabsBar = () => {
             <img src={tab.icon} alt="" className="w-4 h-4" />
           )}
           <span className="truncate text-xs">{tab.title}</span>
-          <button 
+          <Button 
             onClick={(e) => {
               e.stopPropagation();
               handleCloseTab(tab.id);
             }}
-            className="opacity-0 group-hover:opacity-100 hover:bg-gray-200 rounded-full p-0.5"
+            variant="ghost"
+            size="icon-xs"
+            className="opacity-0 group-hover:opacity-100 p-0 h-4 w-4 rounded-full"
           >
             <X size={12} />
-          </button>
+          </Button>
         </div>
       ))}
       
-      <button 
+      <Button 
         onClick={handleAddTab}
-        className="p-2 hover:bg-gray-100"
+        variant="ghost" 
+        size="icon-xs"
+        className="p-2"
       >
         <Plus size={14} />
-      </button>
+      </Button>
     </div>
   );
 };

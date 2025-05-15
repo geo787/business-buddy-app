@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, RotateCcw, Home, Star, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface BrowserAddressBarProps {
   currentUrl?: string;
@@ -13,18 +14,18 @@ const BrowserAddressBar = ({ currentUrl = "business-buddy-app.lovable.app/dashbo
   return (
     <div className="bg-[#f1f3f4] py-2 px-3 flex items-center gap-2 border-b border-gray-300">
       <div className="flex items-center gap-1">
-        <button className="p-1 rounded-full hover:bg-gray-200" aria-label="Back">
+        <Button variant="ghost" size="icon-xs" className="rounded-full p-1" aria-label="Back">
           <ArrowLeft size={16} className="text-gray-500" />
-        </button>
-        <button className="p-1 rounded-full hover:bg-gray-200" aria-label="Forward">
+        </Button>
+        <Button variant="ghost" size="icon-xs" className="rounded-full p-1" aria-label="Forward">
           <ArrowRight size={16} className="text-gray-500" />
-        </button>
-        <button className="p-1 rounded-full hover:bg-gray-200" aria-label="Reload">
+        </Button>
+        <Button variant="ghost" size="icon-xs" className="rounded-full p-1" aria-label="Reload">
           <RotateCcw size={16} className="text-gray-500" />
-        </button>
-        <button className="p-1 rounded-full hover:bg-gray-200" aria-label="Home">
+        </Button>
+        <Button variant="ghost" size="icon-xs" className="rounded-full p-1" aria-label="Home">
           <Home size={16} className="text-gray-500" />
-        </button>
+        </Button>
       </div>
       
       <div className="flex-1 max-w-[800px] mx-auto">
@@ -40,21 +41,21 @@ const BrowserAddressBar = ({ currentUrl = "business-buddy-app.lovable.app/dashbo
           <div className="flex-1 text-sm text-gray-700 truncate">
             {currentUrl}
           </div>
-          <div className="text-gray-400 ml-2 cursor-pointer">
+          <Button variant="ghost" size="icon-xs" className="text-gray-400 p-0 h-4 w-4">
             <Star size={16} />
-          </div>
+          </Button>
         </div>
       </div>
       
       <div className="flex items-center gap-1.5">
-        <button className="p-1 rounded-full hover:bg-gray-200" aria-label="Profile">
+        <Button variant="ghost" size="icon-xs" className="rounded-full p-1" aria-label="Profile">
           <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-gray-700 font-medium">
             U
           </div>
-        </button>
-        <button className="p-1 rounded-full hover:bg-gray-200" aria-label="More">
+        </Button>
+        <Button variant="ghost" size="icon-xs" className="rounded-full p-1" aria-label="More">
           <ChevronDown size={16} className="text-gray-500" />
-        </button>
+        </Button>
       </div>
     </div>
   );
