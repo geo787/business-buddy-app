@@ -1,33 +1,33 @@
 
 import { NavItem, TopNavItem } from "./types";
-import { Book, HelpCircle, Lightbulb, Settings } from "lucide-react";
+import { ArrowRight, Book, Code, Github, HelpCircle, Lightbulb, Settings } from "lucide-react";
 
 export const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard" },
+  { label: "Documentation", href: "/docs" },
   { label: "Features", href: "#features" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" }
+  { label: "Community", href: "#community" },
+  { label: "Contribute", href: "#contribute" }
 ];
 
 export const topNavItems: TopNavItem[] = [
   { 
-    label: "Start Here", 
+    label: "Get Started", 
     href: "/start",
     icon: "ArrowRight"
   },
   { 
-    label: "Resources", 
-    href: "/resources",
+    label: "Documentation", 
+    href: "/docs",
     icon: "Book",
     children: [
-      { label: "Frontend", href: "/roadmaps/frontend" },
-      { label: "Backend", href: "/roadmaps/backend" },
-      { label: "DevOps", href: "/roadmaps/devops" },
-      { label: "Full Stack", href: "/roadmaps/fullstack" },
+      { label: "Installation", href: "/docs/installation" },
+      { label: "API Reference", href: "/docs/api" },
+      { label: "Examples", href: "/docs/examples" },
+      { label: "Contributing", href: "/docs/contributing" },
     ]
   },
   { 
-    label: "AI Assistant", 
+    label: "Demo", 
     href: "#",
     icon: "Lightbulb",
     action: true
@@ -38,8 +38,8 @@ export const topNavItems: TopNavItem[] = [
     icon: "HelpCircle" 
   },
   {
-    label: "Settings",
-    href: "/settings",
+    label: "GitHub",
+    href: "https://github.com/open-source/business-buddy",
     icon: "Settings"
   }
 ];

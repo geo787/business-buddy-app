@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { TopNavItem } from "./types";
-import { ArrowRight, Book, HelpCircle, Lightbulb, Settings } from "lucide-react";
+import { ArrowRight, Book, Github, HelpCircle, Lightbulb, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface NavbarDesktopNavProps {
@@ -31,7 +31,7 @@ export function NavbarDesktopNav({ items, onToggleAssistant }: NavbarDesktopNavP
       case 'HelpCircle':
         return <HelpCircle size={16} />;
       case 'Settings':
-        return <Settings size={16} />;
+        return <Github size={16} />; // Using Github icon for the Settings slot
       default:
         return null;
     }
@@ -77,10 +77,25 @@ export function NavbarDesktopNav({ items, onToggleAssistant }: NavbarDesktopNavP
             </NavigationMenuItem>
           ) : (
             <NavigationMenuItem key={item.label}>
-              <Link to={item.href} className={cn(navigationMenuTriggerStyle(), "text-sm flex items-center gap-1")}>
-                {item.icon && getIcon(item.icon)}
-                {item.label}
-              </Link>
+              {item.href.startsWith('http') ? (
+                <a 
+                  href={item.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={cn(navigationMenuTriggerStyle(), "text-sm flex items-center gap-1")}
+                >
+                  {item.icon && getIcon(item.icon)}
+                  {item.label}
+                </a>
+              ) : (
+                <Link 
+                  to={item.href} 
+                  className={cn(navigationMenuTriggerStyle(), "text-sm flex items-center gap-1")}
+                >
+                  {item.icon && getIcon(item.icon)}
+                  {item.label}
+                </Link>
+              )}
             </NavigationMenuItem>
           )
         ))}

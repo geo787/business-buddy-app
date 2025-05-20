@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, LogIn, MessageSquare, ChevronDown, ArrowRight, Book, HelpCircle, Lightbulb, Settings } from "lucide-react";
+import { Menu, LogIn, MessageSquare, ChevronDown, ArrowRight, Book, Github, HelpCircle, Lightbulb, Settings } from "lucide-react";
 import { NavItem, TopNavItem } from "./types";
 
 interface NavbarMobileMenuProps {
@@ -29,7 +29,7 @@ export function NavbarMobileMenu({
       case 'HelpCircle':
         return <HelpCircle size={18} />;
       case 'Settings':
-        return <Settings size={18} />;
+        return <Github size={18} />; // Using Github icon for the Settings slot
       default:
         return null;
     }
@@ -61,16 +61,31 @@ export function NavbarMobileMenu({
                     </span>
                   </Button>
                 ) : (
-                  <Link 
-                    to={item.href}
-                    className="text-foreground/80 hover:text-primary transition-colors py-2 flex items-center justify-between"
-                  >
-                    <span className="flex items-center gap-2">
-                      {item.icon && getIcon(item.icon)}
-                      {item.label}
-                    </span>
-                    {item.children && <ChevronDown size={16} />}
-                  </Link>
+                  item.href.startsWith('http') ? (
+                    <a 
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-foreground/80 hover:text-primary transition-colors py-2 flex items-center justify-between"
+                    >
+                      <span className="flex items-center gap-2">
+                        {item.icon && getIcon(item.icon)}
+                        {item.label}
+                      </span>
+                      {item.children && <ChevronDown size={16} />}
+                    </a>
+                  ) : (
+                    <Link 
+                      to={item.href}
+                      className="text-foreground/80 hover:text-primary transition-colors py-2 flex items-center justify-between"
+                    >
+                      <span className="flex items-center gap-2">
+                        {item.icon && getIcon(item.icon)}
+                        {item.label}
+                      </span>
+                      {item.children && <ChevronDown size={16} />}
+                    </Link>
+                  )
                 )}
                 
                 {item.children && (
@@ -111,7 +126,7 @@ export function NavbarMobileMenu({
                 className="w-full justify-start gap-2"
               >
                 <MessageSquare size={18} />
-                <span>Asistent</span>
+                <span>Demo</span>
               </Button>
             )}
             
@@ -132,11 +147,20 @@ export function NavbarMobileMenu({
               </Button>
             </Link>
 
-            <Link to="/register" className="w-full">
-              <Button variant="outline" className="w-full justify-start">
-                Sign Up
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start gap-2"
+              asChild
+            >
+              <a 
+                href="https://github.com/open-source/business-buddy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Github size={18} />
+                <span>GitHub</span>
+              </a>
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
