@@ -20,10 +20,10 @@ const Automation = () => {
       <Tabs defaultValue="chatbot" className="w-full">
         <TabsList className="w-full sm:w-auto grid grid-cols-2 sm:inline-flex mb-4">
           <TabsTrigger value="chatbot" className="flex items-center gap-2">
-            <Bot className="h-4 w-4 hidden sm:block" /> Chatbot AI
+            <Bot className="h-4 w-4 hidden sm:inline-block" /> Chatbot AI
           </TabsTrigger>
           <TabsTrigger value="workflows" className="flex items-center gap-2">
-            <Workflow className="h-4 w-4 hidden sm:block" /> Workflows
+            <Workflow className="h-4 w-4 hidden sm:inline-block" /> Workflows
           </TabsTrigger>
         </TabsList>
         

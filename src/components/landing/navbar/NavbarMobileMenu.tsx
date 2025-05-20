@@ -43,7 +43,7 @@ export function NavbarMobileMenu({
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="py-4">
           <div className="flex flex-col gap-4 pt-8">
             {/* Top navigation items in mobile menu */}
             <h3 className="font-semibold mb-2">Main Navigation</h3>

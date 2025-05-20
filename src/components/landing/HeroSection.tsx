@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onViewDemo }: HeroSectionProps) => {
   return (
-    <section className="py-20 md:py-32 bg-gradient-to-br from-blue-50 to-purple-50">
+    <section className="py-20 md:py-32 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
       <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
         <div className="text-center md:text-left">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 animate-fade-in">
@@ -16,7 +16,7 @@ const HeroSection = ({ onViewDemo }: HeroSectionProps) => {
               Smart Solutions
             </span>
           </h1>
-          <p className="text-xl text-gray-600 mb-10">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-10">
             Leverage AI-powered tools to understand, engage, and retain your customers more effectively than ever before.
           </p>
           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -29,8 +29,8 @@ const HeroSection = ({ onViewDemo }: HeroSectionProps) => {
           </div>
         </div>
         <div className="hidden md:block relative">
-          <div className="absolute -top-10 -right-10 w-64 h-64 bg-purple-200 rounded-full opacity-50 blur-xl"></div>
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-blue-200 rounded-full opacity-50 blur-xl"></div>
+          <div className="absolute -top-10 -right-10 w-64 h-64 bg-purple-200 dark:bg-purple-900/20 rounded-full opacity-50 blur-xl"></div>
+          <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-blue-200 dark:bg-blue-900/20 rounded-full opacity-50 blur-xl"></div>
           <div className="relative z-10 rounded-xl shadow-2xl overflow-hidden">
             <img 
               src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
