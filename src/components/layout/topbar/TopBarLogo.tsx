@@ -16,8 +16,8 @@ export function TopBarLogo({ isMobile, toggleSidebar }: TopBarLogoProps) {
         </Button>
       )}
       
-      <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-        <span className="text-primary-foreground font-bold">BB</span>
+      <div className="h-8 w-8 rounded-md bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+        <span className="text-white font-bold">BB</span>
       </div>
       <h2 className="font-bold text-lg tracking-tight hidden sm:block">Business Buddy</h2>
     </div>
