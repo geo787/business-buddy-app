@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, LogIn, MessageSquare, ChevronDown } from "lucide-react";
+import { Menu, LogIn, MessageSquare, ChevronDown, ArrowRight, Book, HelpCircle, Lightbulb, Settings } from "lucide-react";
 import { NavItem, TopNavItem } from "./types";
 
 interface NavbarMobileMenuProps {
@@ -18,6 +18,23 @@ export function NavbarMobileMenu({
   onViewDemo,
   onToggleAssistant
 }: NavbarMobileMenuProps) {
+  const getIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'ArrowRight':
+        return <ArrowRight size={18} />;
+      case 'Book':
+        return <Book size={18} />;
+      case 'Lightbulb':
+        return <Lightbulb size={18} />;
+      case 'HelpCircle':
+        return <HelpCircle size={18} />;
+      case 'Settings':
+        return <Settings size={18} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="md:hidden">
       <Sheet>
@@ -32,13 +49,29 @@ export function NavbarMobileMenu({
             <h3 className="font-semibold mb-2">Main Navigation</h3>
             {topNavItems.map((item) => (
               <div key={item.label}>
-                <Link 
-                  to={item.href}
-                  className="text-foreground/80 hover:text-primary transition-colors py-2 flex items-center justify-between"
-                >
-                  {item.label}
-                  {item.children && <ChevronDown size={16} />}
-                </Link>
+                {item.action ? (
+                  <Button 
+                    onClick={onToggleAssistant}
+                    variant="ghost"
+                    className="text-foreground/80 hover:text-primary transition-colors py-2 flex items-center justify-between w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      {item.icon && getIcon(item.icon)}
+                      {item.label}
+                    </span>
+                  </Button>
+                ) : (
+                  <Link 
+                    to={item.href}
+                    className="text-foreground/80 hover:text-primary transition-colors py-2 flex items-center justify-between"
+                  >
+                    <span className="flex items-center gap-2">
+                      {item.icon && getIcon(item.icon)}
+                      {item.label}
+                    </span>
+                    {item.children && <ChevronDown size={16} />}
+                  </Link>
+                )}
                 
                 {item.children && (
                   <div className="ml-4 border-l border-border pl-4 mt-1 space-y-2">

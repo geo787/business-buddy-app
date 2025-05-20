@@ -1,5 +1,6 @@
 
 import { NavItem, TopNavItem } from "./types";
+import { Book, HelpCircle, Lightbulb, Settings } from "lucide-react";
 
 export const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard" },
@@ -9,10 +10,15 @@ export const navItems: NavItem[] = [
 ];
 
 export const topNavItems: TopNavItem[] = [
-  { label: "Start Here", href: "/start" },
   { 
-    label: "Roadmaps", 
-    href: "#",
+    label: "Start Here", 
+    href: "/start",
+    icon: "ArrowRight"
+  },
+  { 
+    label: "Resources", 
+    href: "/resources",
+    icon: "Book",
     children: [
       { label: "Frontend", href: "/roadmaps/frontend" },
       { label: "Backend", href: "/roadmaps/backend" },
@@ -21,11 +27,19 @@ export const topNavItems: TopNavItem[] = [
     ]
   },
   { 
-    label: "AI Tutor", 
-    href: "/ai-tutor" 
+    label: "AI Assistant", 
+    href: "#",
+    icon: "Lightbulb",
+    action: true
   },
   { 
-    label: "Teams", 
-    href: "/teams" 
+    label: "Support", 
+    href: "/support",
+    icon: "HelpCircle" 
   },
+  {
+    label: "Settings",
+    href: "/settings",
+    icon: "Settings"
+  }
 ];

@@ -37,7 +37,7 @@ const Navbar = ({ onViewDemo, onToggleAssistant }: NavbarProps) => {
           <NavbarBrand />
 
           {/* Desktop top navigation */}
-          <NavbarDesktopNav items={topNavItems} />
+          <NavbarDesktopNav items={topNavItems} onToggleAssistant={onToggleAssistant} />
 
           {/* Authentication buttons */}
           <NavbarAuthButtons />

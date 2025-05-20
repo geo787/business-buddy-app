@@ -11,19 +11,53 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { TopNavItem } from "./types";
+import { ArrowRight, Book, HelpCircle, Lightbulb, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface NavbarDesktopNavProps {
   items: TopNavItem[];
+  onToggleAssistant?: () => void;
 }
 
-export function NavbarDesktopNav({ items }: NavbarDesktopNavProps) {
+export function NavbarDesktopNav({ items, onToggleAssistant }: NavbarDesktopNavProps) {
+  const getIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'ArrowRight':
+        return <ArrowRight size={16} />;
+      case 'Book':
+        return <Book size={16} />;
+      case 'Lightbulb':
+        return <Lightbulb size={16} />;
+      case 'HelpCircle':
+        return <HelpCircle size={16} />;
+      case 'Settings':
+        return <Settings size={16} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
         {items.map((item) => (
-          item.children ? (
+          item.action ? (
             <NavigationMenuItem key={item.label}>
-              <NavigationMenuTrigger className="text-sm">{item.label}</NavigationMenuTrigger>
+              <Button 
+                onClick={onToggleAssistant} 
+                variant="ghost" 
+                className={navigationMenuTriggerStyle()}
+              >
+                {item.icon && getIcon(item.icon)}
+                <span className="ml-1">{item.label}</span>
+              </Button>
+            </NavigationMenuItem>
+          ) : item.children ? (
+            <NavigationMenuItem key={item.label}>
+              <NavigationMenuTrigger className="text-sm flex items-center gap-1">
+                {item.icon && getIcon(item.icon)}
+                {item.label}
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
                   {item.children.map((child) => (
@@ -43,7 +77,8 @@ export function NavbarDesktopNav({ items }: NavbarDesktopNavProps) {
             </NavigationMenuItem>
           ) : (
             <NavigationMenuItem key={item.label}>
-              <Link to={item.href} className={cn(navigationMenuTriggerStyle(), "text-sm")}>
+              <Link to={item.href} className={cn(navigationMenuTriggerStyle(), "text-sm flex items-center gap-1")}>
+                {item.icon && getIcon(item.icon)}
                 {item.label}
               </Link>
             </NavigationMenuItem>

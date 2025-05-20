@@ -12,5 +12,7 @@ export interface ChildNavItem {
 export interface TopNavItem {
   label: string;
   href: string;
+  icon?: string;
   children?: ChildNavItem[];
+  action?: boolean;
 }
