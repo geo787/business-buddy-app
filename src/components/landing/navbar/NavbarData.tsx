@@ -1,9 +1,9 @@
 
 import { NavItem, TopNavItem } from "./types";
-import { ArrowRight, Book, Code, Github, HelpCircle, Lightbulb, Settings } from "lucide-react";
+import { ArrowRight, Book, Github, HelpCircle, Lightbulb, Settings } from "lucide-react";
 
 export const navItems: NavItem[] = [
-  { label: "Documentation", href: "/docs" },
+  { label: "Resources", href: "/resources" },
   { label: "Features", href: "#features" },
   { label: "Community", href: "#community" },
   { label: "Contribute", href: "#contribute" }
@@ -16,14 +16,14 @@ export const topNavItems: TopNavItem[] = [
     icon: "ArrowRight"
   },
   { 
-    label: "Documentation", 
-    href: "/docs",
+    label: "Resources", 
+    href: "/resources",
     icon: "Book",
     children: [
-      { label: "Installation", href: "/docs/installation" },
-      { label: "API Reference", href: "/docs/api" },
-      { label: "Examples", href: "/docs/examples" },
-      { label: "Contributing", href: "/docs/contributing" },
+      { label: "Installation", href: "/resources/installation" },
+      { label: "API Reference", href: "/resources/api" },
+      { label: "Examples", href: "/resources/examples" },
+      { label: "Contributing", href: "/resources/contributing" },
     ]
   },
   { 
