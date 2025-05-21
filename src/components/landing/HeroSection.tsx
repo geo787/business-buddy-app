@@ -20,7 +20,7 @@ const HeroSection = ({ onViewDemo }: HeroSectionProps) => {
               Smart Solutions for Customer Retention
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-black dark:text-gray-300 mb-10 leading-relaxed">
+          <p className="text-xl md:text-2xl font-medium text-black dark:text-gray-300 mb-10 leading-relaxed !important">
             Leverage AI-powered tools to understand, engage, and retain your customers more effectively than ever before.
           </p>
           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
