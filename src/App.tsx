@@ -16,6 +16,8 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Automation from "./pages/Automation";
+import BusinessBuddy from "./pages/BusinessBuddy";
+import MyProjects from "./pages/MyProjects";
 import AppLayout from "./components/layout/AppLayout";
 import VirtualAssistant from "@/components/assistant/VirtualAssistant";
 import Logistics from "./pages/Logistics";
@@ -81,6 +83,8 @@ const AppContent = () => {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/logistics" element={<Logistics />} />
           <Route path="/finance" element={<Finance />} />
+          <Route path="/business-buddy" element={<BusinessBuddy />} />
+          <Route path="/my-projects" element={<MyProjects />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/automation" element={<Automation />} />
         </Route>
