@@ -11,30 +11,30 @@ export const navItems: NavItem[] = [
 
 export const topNavItems: TopNavItem[] = [
   { 
-    label: "Get Started", 
-    href: "/start",
+    label: "Dashboard", 
+    href: "/dashboard",
     icon: "ArrowRight"
   },
   { 
-    label: "Resources", 
-    href: "/resources",
+    label: "Tools", 
+    href: "/business-buddy",
     icon: "Book",
     children: [
-      { label: "Installation", href: "/resources/installation" },
-      { label: "API Reference", href: "/resources/api" },
-      { label: "Examples", href: "/resources/examples" },
-      { label: "Contributing", href: "/resources/contributing" },
+      { label: "Business Buddy", href: "/business-buddy" },
+      { label: "My Projects", href: "/my-projects" },
+      { label: "Analytics", href: "/analytics" },
+      { label: "Automation", href: "/automation" },
     ]
   },
   { 
-    label: "Demo", 
+    label: "AI Assistant", 
     href: "#",
     icon: "Lightbulb",
     action: true
   },
   { 
-    label: "Support", 
-    href: "/support",
+    label: "Settings", 
+    href: "/settings",
     icon: "HelpCircle" 
   },
   {
