@@ -43,14 +43,16 @@ const ChatWindow = ({
       <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-t-lg">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <Sparkles size={18} />
-            Business Buddy Assistant
+            <Sparkles size={18} className="animate-pulse" />
+            Business Buddy AI
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">GPT-4</span>
           </CardTitle>
           <Button 
             variant="ghost" 
             size="icon" 
             className="h-8 w-8 text-white hover:bg-white/20" 
             onClick={onNewChat}
+            title="Conversație nouă"
           >
             <Bot size={16} />
           </Button>

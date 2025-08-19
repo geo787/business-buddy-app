@@ -48,8 +48,9 @@ const AssistantChat = ({
           </Button>
           
           <div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full">
-            <Sparkles size={14} className="text-primary" />
+            <Sparkles size={14} className="text-primary animate-pulse" />
             <span className="text-xs font-medium text-primary">Business Buddy AI</span>
+            <span className="text-xs bg-primary/10 px-1.5 py-0.5 rounded-full text-primary">GPT-4</span>
           </div>
         </div>
         

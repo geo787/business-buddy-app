@@ -1,48 +1,47 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Message } from "@/models/Message";
-import { Intent, getStoredIntents, getStoredAnalytics, saveAnalytics } from "@/models/Intent";
-import { getAdvancedAIResponse } from "@/utils/nlpUtils";
-import { getConversationContext, generateFollowUpQuestions } from "@/utils/chatUtils";
 
 export const useAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [intents] = useState<Intent[]>(getStoredIntents());
   const [sessionActive, setSessionActive] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [showQuickReplies, setShowQuickReplies] = useState(false);
   const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([]);
   const { toast } = useToast();
-  
-  const conversationContextRef = useRef<string[]>([]);
 
   useEffect(() => {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
         id: '1',
-        content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
+        content: `🚀 Bună ziua! Sunt **Business Buddy AI**, asistentul tău virtual expert în business!
+
+✨ **Ce pot să fac pentru tine:**
+• Analizez situația financiară și fluxul de numerar
+• Creez planuri de business și strategii de marketing  
+• Optimizez operațiunile și logistica afacerii
+• Validez idei de business noi
+• Ușor teren prin antreprenoriat și managementul riscurilor
+
+Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
         sender: 'assistant',
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
       
       setFollowUpQuestions([
-        "Vreau să verific statusul financiar",
-        "Cum optimizez fluxul de numerar?",
-        "Am nevoie de ajutor cu logistica"
+        "Analizează fluxul meu de numerar 💰",
+        "Vreau să validez o idee de business 💡",
+        "Cum optimizez operațiunile? ⚡"
       ]);
     }
   }, [messages.length]);
 
   useEffect(() => {
     if (isOpen && !sessionActive) {
-      const analytics = getStoredAnalytics();
-      analytics.sessionsCount = (analytics.sessionsCount || 0) + 1;
-      analytics.lastSessionDate = new Date();
-      saveAnalytics(analytics);
       setSessionActive(true);
     }
   }, [isOpen, sessionActive]);
@@ -56,15 +55,7 @@ export const useAssistant = () => {
     return () => window.removeEventListener('toggle-assistant', handleToggleAssistant);
   }, []);
 
-  useEffect(() => {
-    if (messages.length > 0) {
-      conversationContextRef.current = getConversationContext(
-        messages.map(m => ({ content: m.content, sender: m.sender as 'user' | 'assistant' }))
-      );
-    }
-  }, [messages]);
-
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
     
     const userMessage: Message = {
@@ -76,53 +67,72 @@ export const useAssistant = () => {
     
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
+    const currentInput = inputMessage;
     setInputMessage("");
     setShowQuickReplies(false);
     
-    const conversationContext = conversationContextRef.current;
-    
-    // Calculate a realistic delay based on message length
-    const wordCount = inputMessage.split(/\s+/).length;
-    const baseDelay = 800;
-    const wordsPerSecondFactor = 100;
-    // More intelligent, variable typing delay based on complexity
-    const hasComplexTerms = /profit|investiție|fiscal|contabilitate|logistică|optimizare/.test(inputMessage.toLowerCase());
-    const complexityMultiplier = hasComplexTerms ? 1.5 : 1;
-    const thinkingDelay = Math.min(
-      baseDelay + (wordCount * wordsPerSecondFactor * complexityMultiplier), 
-      4000
-    );
-    
-    setTimeout(() => {
-      const { response, matchedIntent } = getAdvancedAIResponse(
-        inputMessage, 
-        intents, 
-        conversationContext
-      );
+    try {
+      // Send the conversation history for context
+      const conversationHistory = messages.slice(-10); // Last 10 messages for context
+      
+      const response = await fetch('/supabase/functions/v1/ai-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentInput,
+          conversationHistory: conversationHistory
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: response,
+        content: data.reply || 'Îmi pare rău, nu am putut procesa cererea.',
         sender: 'assistant',
         timestamp: new Date(),
       };
       
       setMessages(prev => [...prev, assistantMessage]);
+      setFollowUpQuestions(data.followUp || []);
+      
+      toast({
+        title: "✨ Răspuns generat cu AI",
+        description: "Asistentul Business Buddy a analizat cererea ta",
+        duration: 2000,
+      });
+      
+    } catch (error) {
+      console.error('Chat error:', error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: 'Îmi pare rău, am întâmpinat o problemă tehnică. Asigură-te că ai configurat corect API key-ul OpenAI și încearcă din nou.',
+        sender: 'assistant',
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "Eroare de conectare",
+        description: "Nu am putut contacta serviciul AI. Verifică configurația.",
+        variant: "destructive",
+        duration: 4000,
+      });
+    } finally {
       setIsTyping(false);
-      
-      // Generate more contextual follow-ups based on the conversation
-      const newFollowUps = generateFollowUpQuestions(response, matchedIntent);
-      setFollowUpQuestions(newFollowUps);
-      
-      // Only show toast for significant matches
-      if (matchedIntent && matchedIntent.category) {
-        toast({
-          title: "Intent identificat",
-          description: `Asistentul a identificat intent-ul: ${matchedIntent.name}`,
-          duration: 2000,
-        });
-      }
-    }, thinkingDelay);
+    }
   };
 
   const handleQuickReply = (message: string) => {
@@ -136,24 +146,29 @@ export const useAssistant = () => {
     setMessages([
       {
         id: Date.now().toString(),
-        content: 'Bună ziua! Sunt asistentul virtual Business Buddy AI. Cum vă pot ajuta astăzi cu finanțele sau logistica afacerii dumneavoastră?',
+        content: `🚀 Bună ziua! Sunt **Business Buddy AI**, asistentul tău virtual expert în business!
+
+✨ **Ce pot să fac pentru tine:**
+• Analizez situația financiară și fluxul de numerar
+• Creez planuri de business și strategii de marketing  
+• Optimizez operațiunile și logistica afacerii
+• Validez idei de business noi
+• Ușor teren prin antreprenoriat și managementul riscurilor
+
+Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
         sender: 'assistant',
         timestamp: new Date(),
       }
     ]);
     setShowQuickReplies(false);
-    conversationContextRef.current = [];
     
     setFollowUpQuestions([
-      "Vreau să verific statusul financiar",
-      "Cum optimizez fluxul de numerar?",
-      "Am nevoie de ajutor cu logistica"
+      "Analizează fluxul meu de numerar 💰",
+      "Vreau să validez o idee de business 💡", 
+      "Cum optimizez operațiunile? ⚡"
     ]);
     
-    const analytics = getStoredAnalytics();
-    analytics.sessionsCount = (analytics.sessionsCount || 0) + 1;
-    analytics.lastSessionDate = new Date();
-    saveAnalytics(analytics);
+    setSessionActive(true);
   };
 
   const toggleQuickReplies = () => {
