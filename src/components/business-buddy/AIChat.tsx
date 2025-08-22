@@ -16,7 +16,16 @@ export const AIChat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Salut! Sunt Business Buddy AI, asistentul tău pentru dezvoltarea afacerii. Cu ce te pot ajuta astăzi?',
+      content: `🚀 Bună ziua! Sunt **Business Buddy AI**, asistentul tău virtual expert în business!
+
+✨ **Ce pot să fac pentru tine:**
+• Analizez situația financiară și fluxul de numerar
+• Creez planuri de business și strategii de marketing  
+• Optimizez operațiunile și logistica afacerii
+• Validez idei de business noi
+• Te ghidez prin antreprenoriat și managementul riscurilor
+
+Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
       role: 'assistant',
       timestamp: new Date(),
     }
@@ -36,41 +45,67 @@ export const AIChat = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = input;
     setInput("");
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('https://xvufajrfsggkfegoctpv.supabase.co/functions/v1/ai-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: input,
-          history: messages.slice(-10), // Trimite ultimele 10 mesaje pentru context
+          message: currentInput,
+          conversationHistory: messages.slice(-10).map(m => ({
+            role: m.role === 'user' ? 'user' : 'assistant',
+            content: m.content
+          }))
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Eroare la comunicarea cu AI');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.response,
+        content: data.reply || 'Îmi pare rău, nu am putut procesa cererea.',
         role: 'assistant',
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, aiMessage]);
+      
+      toast({
+        title: "✨ Răspuns generat cu AI",
+        description: "Business Buddy a analizat cererea ta",
+        duration: 2000,
+      });
+      
     } catch (error) {
       console.error('Eroare chat:', error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: 'Îmi pare rău, am întâmpinat o problemă tehnică. Asigură-te că ai configurat corect API key-ul OpenAI și încearcă din nou.',
+        role: 'assistant',
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      
       toast({
-        title: "Eroare",
-        description: "Nu am putut trimite mesajul. Încearcă din nou.",
+        title: "Eroare de conectare",
+        description: "Nu am putut contacta serviciul AI. Verifică configurația.",
         variant: "destructive",
+        duration: 4000,
       });
     } finally {
       setIsLoading(false);

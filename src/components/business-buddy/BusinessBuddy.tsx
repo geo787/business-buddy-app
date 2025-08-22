@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, Lightbulb, FileText, Truck } from "lucide-react";
+import { Brain, Lightbulb, FileText, Truck, BarChart3, Upload } from "lucide-react";
 import { AIChat } from "./AIChat";
 import { IdeaValidator } from "./IdeaValidator";
 import { LeanCanvas } from "./LeanCanvas";
 import { LogisticsForm } from "./LogisticsForm";
+import { BusinessAnalytics } from "./BusinessAnalytics";
+import { DocumentAnalyzer } from "./DocumentAnalyzer";
 
 export const BusinessBuddy = () => {
   return (
@@ -20,18 +22,26 @@ export const BusinessBuddy = () => {
       </div>
 
       <Tabs defaultValue="chat" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="chat" className="flex items-center gap-2">
             <Brain className="w-4 h-4" />
             Chat AI
           </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" />
+            Analize
+          </TabsTrigger>
+          <TabsTrigger value="documents" className="flex items-center gap-2">
+            <Upload className="w-4 h-4" />
+            Documente
+          </TabsTrigger>
           <TabsTrigger value="validator" className="flex items-center gap-2">
             <Lightbulb className="w-4 h-4" />
-            Validator Idei
+            Validator
           </TabsTrigger>
           <TabsTrigger value="canvas" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            Lean Canvas
+            Canvas
           </TabsTrigger>
           <TabsTrigger value="logistics" className="flex items-center gap-2">
             <Truck className="w-4 h-4" />
@@ -49,6 +59,34 @@ export const BusinessBuddy = () => {
             </CardHeader>
             <CardContent>
               <AIChat />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analizor Business AI</CardTitle>
+              <CardDescription>
+                Analizează performanța afacerii tale cu insights avansate AI
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <BusinessAnalytics />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="documents" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analizor Documente AI</CardTitle>
+              <CardDescription>
+                Încarcă și analizează documente de business cu inteligență artificială
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DocumentAnalyzer />
             </CardContent>
           </Card>
         </TabsContent>
