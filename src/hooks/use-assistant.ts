@@ -17,25 +17,25 @@ export const useAssistant = () => {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
         id: '1',
-        content: `🚀 Bună ziua! Sunt **Business Buddy AI**, asistentul tău virtual expert în business!
+        content: `🤖 Bună ziua! Sunt **AI Assistant**, asistentul tău inteligent pentru orice problemă!
 
 ✨ **Ce pot să fac pentru tine:**
-• Analizez situația financiară și fluxul de numerar
-• Creez planuri de business și strategii de marketing  
-• Optimizez operațiunile și logistica afacerii
-• Validez idei de business noi
-• Ușor teren prin antreprenoriat și managementul riscurilor
+• Răspund la întrebări complexe și îți ofer soluții
+• Te ajut cu planificarea, strategiile și deciziile
+• Analizez probleme și găsesc soluții creative
+• Te asist cu business, tehnologie, educație
+• Îți ofer sfaturi personalizate și practice
 
-Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
+Cum te pot ajuta astăzi? Spune-mi orice problemă ai! 💡`,
         sender: 'assistant',
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
       
       setFollowUpQuestions([
-        "Analizează fluxul meu de numerar 💰",
-        "Vreau să validez o idee de business 💡",
-        "Cum optimizez operațiunile? ⚡"
+        "Ajută-mă să rezolv o problemă 🎯",
+        "Vreau sfaturi și idei creative 💡",
+        "Cum pot să îmbunătățesc ceva? ⚡"
       ]);
     }
   }, [messages.length]);
@@ -75,14 +75,17 @@ Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
       // Send the conversation history for context
       const conversationHistory = messages.slice(-10); // Last 10 messages for context
       
-      const response = await fetch('/supabase/functions/v1/ai-chat', {
+      const response = await fetch('https://xvufajrfsggkfegoctpv.supabase.co/functions/v1/ai-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: currentInput,
-          conversationHistory: conversationHistory
+          conversationHistory: conversationHistory.map(msg => ({
+            role: msg.sender === 'user' ? 'user' : 'assistant',
+            content: msg.content
+          }))
         }),
       });
 
@@ -146,16 +149,16 @@ Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
     setMessages([
       {
         id: Date.now().toString(),
-        content: `🚀 Bună ziua! Sunt **Business Buddy AI**, asistentul tău virtual expert în business!
+        content: `🤖 Bună ziua! Sunt **AI Assistant**, asistentul tău inteligent pentru orice problemă!
 
 ✨ **Ce pot să fac pentru tine:**
-• Analizez situația financiară și fluxul de numerar
-• Creez planuri de business și strategii de marketing  
-• Optimizez operațiunile și logistica afacerii
-• Validez idei de business noi
-• Ușor teren prin antreprenoriat și managementul riscurilor
+• Răspund la întrebări complexe și îți ofer soluții
+• Te ajut cu planificarea, strategiile și deciziile
+• Analizez probleme și găsesc soluții creative
+• Te asist cu business, tehnologie, educație
+• Îți ofer sfaturi personalizate și practice
 
-Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
+Cum te pot ajuta astăzi? Spune-mi orice problemă ai! 💡`,
         sender: 'assistant',
         timestamp: new Date(),
       }
@@ -163,9 +166,9 @@ Cum te pot ajuta astăzi să-ți dezvolți afacerea? 💼`,
     setShowQuickReplies(false);
     
     setFollowUpQuestions([
-      "Analizează fluxul meu de numerar 💰",
-      "Vreau să validez o idee de business 💡", 
-      "Cum optimizez operațiunile? ⚡"
+      "Ajută-mă să rezolv o problemă 🎯",
+      "Vreau sfaturi și idei creative 💡", 
+      "Cum pot să îmbunătățesc ceva? ⚡"
     ]);
     
     setSessionActive(true);
