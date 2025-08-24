@@ -71,8 +71,7 @@ Răspunde în română, fii practic și direct. Oferă soluții concrete și act
       body: JSON.stringify({
         model: 'gpt-4.1-2025-04-14',
         messages: messages,
-        temperature: 0.7,
-        max_tokens: 1000,
+        max_completion_tokens: 1000,
         top_p: 0.9,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
@@ -99,15 +98,14 @@ Răspunde în română, fii practic și direct. Oferă soluții concrete și act
         messages: [
           {
             role: 'system',
-            content: 'Generează exact 3 întrebări de urmărire scurte și relevante bazate pe răspunsul dat. Fiecare întrebare să fie sub 50 de caractere și să încurajeze continuarea conversației despre business. Returnează doar întrebările, fără numerotare.'
+            content: 'Generează exact 3 întrebări de urmărire scurte și relevante bazate pe răspunsul dat. Fiecare întrebare să fie sub 50 de caractere și să încurajeze continuarea conversației. Returnează doar întrebările, fără numerotare.'
           },
           {
             role: 'user',
             content: `Răspuns: ${aiReply}\n\nGenerează 3 întrebări de urmărire relevante:`
           }
         ],
-        temperature: 0.8,
-        max_tokens: 150,
+        max_completion_tokens: 150,
       }),
     })
 
