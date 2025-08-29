@@ -16,8 +16,11 @@ serve(async (req) => {
     
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY')
     if (!openaiApiKey) {
+      console.error('OPENAI_API_KEY environment variable not found')
       throw new Error('OPENAI_API_KEY is not configured')
     }
+    
+    console.log('OpenAI API Key configured successfully')
 
     // Build conversation context with enhanced system prompt
     const messages = [
