@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
@@ -21,6 +22,8 @@ serve(async (req) => {
     }
     
     console.log('OpenAI API Key configured successfully')
+    console.log('API Key length:', openaiApiKey.length)
+    console.log('API Key prefix:', openaiApiKey.substring(0, 7))
 
     // Build conversation context with enhanced system prompt
     const messages = [
@@ -65,6 +68,8 @@ Răspunde în română, fii practic și direct. Oferă soluții concrete și act
       }
     ]
 
+    console.log('Making request to OpenAI with model: gpt-4o-mini')
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -72,21 +77,27 @@ Răspunde în română, fii practic și direct. Oferă soluții concrete și act
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-4o-mini',
         messages: messages,
-        max_completion_tokens: 1000,
+        max_tokens: 1000,
+        temperature: 0.7,
         top_p: 0.9,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
       }),
     })
 
+    console.log('OpenAI response status:', response.status)
+
     if (!response.ok) {
       const errorData = await response.text()
+      console.error('OpenAI API error:', response.status, errorData)
       throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
+    console.log('OpenAI response received successfully')
+    
     const aiReply = data.choices[0].message.content
 
     // Generate intelligent follow-up questions based on the topic
@@ -97,7 +108,7 @@ Răspunde în română, fii practic și direct. Oferă soluții concrete și act
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-mini-2025-04-14',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -108,7 +119,8 @@ Răspunde în română, fii practic și direct. Oferă soluții concrete și act
             content: `Răspuns: ${aiReply}\n\nGenerează 3 întrebări de urmărire relevante:`
           }
         ],
-        max_completion_tokens: 150,
+        max_tokens: 150,
+        temperature: 0.5,
       }),
     })
 
